@@ -19,6 +19,9 @@ module.exports = {
         semi: [2, 'always'],
         indent: [2, 4],
         'no-extend-native': ['error', { exceptions: ['String'] }],
-        '@typescript-eslint/no-var-requires': 0
+        '@typescript-eslint/no-var-requires': 0,
+        '@typescript-eslint/no-explicit-any': 'off',
+        '@typescript-eslint/explicit-module-boundary-types': 'off',
+        camelcase: 'off'
     }
 };
