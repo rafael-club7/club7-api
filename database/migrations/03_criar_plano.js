@@ -7,7 +7,7 @@ exports.up = async function(database, utf8 = false) {
                 table.string('nome', 80).notNullable();
                 table.string('nome_normalizado', 80).notNullable();
 
-                table.string('valor', 80).notNullable();
+                table.decimal('valor', 14, 2).notNullable();
 
                 table.integer('status').defaultTo(1);
                 table.integer('deleted').defaultTo(0);

@@ -9,7 +9,7 @@ exports.up = async function(database, utf8 = false) {
                 table.string('plano', 45).notNullable();
                 table.string('cartao', 45).notNullable();
 
-                table.decimal('valor', 14, 2).defaultTo(0);
+                table.decimal('valor', 14, 2).notNullable();
                 table.string('data_inicio', 30).notNullable();
 
                 table.foreign('usuario').references('id').inTable('usuario');
