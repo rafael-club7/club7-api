@@ -6,9 +6,9 @@ exports.up = async function(database, utf8 = false) {
 
                 table.string('id', 45).primary();
                 table.string('nome', 45).notNullable();
+                table.string('nome_normalizado', 45).notNullable();
                 table.string('icone', 50).notNullable();
 
-                table.foreign('usuario').references('id').inTable('usuario');
                 table.integer('deleted').defaultTo(0);
             });
         }
