@@ -8,6 +8,7 @@ export interface IUsuario {
     senha: string;
     cpf: string;
     data_criacao: string;
+    indicado: string;
     status: string|number;
 }
 
