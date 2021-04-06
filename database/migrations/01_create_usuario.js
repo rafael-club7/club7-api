@@ -11,7 +11,9 @@ exports.up = async function(database, utf8 = false) {
                 table.string('senha', 80).notNullable();
                 table.integer('cpf', 11).notNullable();
 
-                table.string('indicado', 45).notNullable();
+                table.string('data_criacao', 35).notNullable();
+
+                table.string('indicado', 45);
                 table.foreign('indicado').references('id').inTable('usuario');
 
                 table.integer('status').defaultTo(1);
