@@ -148,5 +148,41 @@ routes.post('/login', async (req, res) => {
     res.send(resp);
 });
 
+// [POST] => /logout
+routes.post('/logout', async (req, res) => {
+    const { headers } = req;
+    const resp = {
+        status: 0,
+        msg: '',
+        errors: []
+    };
+
+    const sid = headers.authorization;
+
+    const sessao = await Sessao.Verificar(sid);
+
+    if (sessao.status !== 1) {
+        resp.errors.push({
+            msg: sessao.msg
+        });
+
+        return res.status(401).send(resp);
+    }
+
+    const del = await Sessao.Delete(`id = '${sid}'`);
+
+    if (del.status !== 1) {
+        resp.errors.push({
+            msg: 'Erro ao fazer logout'
+        });
+        return res.status(500).send(resp);
+    }
+
+    resp.status = 1;
+    resp.msg = 'Logout efetuado com sucesso';
+
+    res.send(resp);
+});
+
 
 export default routes;
