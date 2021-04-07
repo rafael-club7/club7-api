@@ -1,5 +1,5 @@
-exports.up = async function(database, utf8 = false) {
-    return database.schema.hasTable('pagamento').then(function(exists) {
+exports.up = async function (database, utf8 = false) {
+    return database.schema.hasTable('pagamento').then(function (exists) {
         if (!exists) {
             return database.schema.createTable('pagamento', table => {
                 if (utf8) { table.collate('utf8_unicode_ci'); }
@@ -7,6 +7,7 @@ exports.up = async function(database, utf8 = false) {
                 table.string('assinatura', 45).notNullable();
 
                 table.string('codigo', 80).notNullable();
+                table.string('referencia', 7).notNullable();
                 table.string('tipo_pagamento', 30).notNullable();
                 table.decimal('valor', 14, 2).notNullable();
                 table.string('data', 30).notNullable();
@@ -20,8 +21,8 @@ exports.up = async function(database, utf8 = false) {
     });
 };
 
-exports.down = async function(database) {
-    return database.schema.hasTable('pagamento').then(function(exists) {
+exports.down = async function (database) {
+    return database.schema.hasTable('pagamento').then(function (exists) {
         if (exists) { return database.schema.dropTable('pagamento'); }
     });
 };

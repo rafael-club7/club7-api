@@ -1,8 +1,10 @@
 import { Router } from 'express';
 
+import UsuarioController from './UsuarioController';
+
 const routes = Router();
 
-[].forEach((route) => {
+[ UsuarioController ].forEach((route) => {
     routes.stack = [...routes.stack, ...route.stack];
 });
 

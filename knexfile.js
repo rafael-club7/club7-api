@@ -1,6 +1,6 @@
-import path from 'path';
+const path = require('path');
 
-export default {
+module.exports = {
     development: {
         client: 'sqlite3',
         connection: {
@@ -20,7 +20,7 @@ export default {
             host: process.env.DB_HOST,
             user: process.env.DB_USER,
             password: process.env.DB_PASS,
-            database: process.env.DB_BASE
+            database: process.env.DB_BASE,
         },
         migrations: {
             directory: path.resolve(__dirname, 'database', 'migrations')

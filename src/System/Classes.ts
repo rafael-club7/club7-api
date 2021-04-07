@@ -1,4 +1,5 @@
-import DB, { DataInterface } from './DB';
+/* eslint valid-typeof: "error" */
+import DB from './DB';
 
 interface Field
 {
@@ -11,14 +12,38 @@ class Classes {
     public static table: string;
     public static fields: Field[];
 
-    static async Count (where : string) : Promise<DataInterface> {
+    static async Validate (data: {[k:string]: any}) : Promise<{ msg: string; }[]> {
+        const errors = [];
+
+        for (const field in data) {
+            const _field = this.fields.find(x => x.name === field);
+
+            if (_field) {
+                if ((typeof data[field] === 'undefined' || [null, ''].includes(<string>data[field])) && _field.required) {
+                    errors.push({
+                        msg: `Campo '${field}' é obrigatório!`
+                    });
+                }
+
+                if (typeof data[field] !== _field.type) {
+                    errors.push({
+                        msg: `Campo '${field}' precisa ser do tipo '${_field.type}'!`
+                    });
+                }
+            }
+        }
+
+        return errors;
+    }
+
+    static async Count (where : string) : Promise<string> {
         const db = new DB(this.table);
         return (where)
             ? (await db.Query(`SELECT count(*) FROM ${this.table} WHERE (${where}) and deleted = 0`))[0]['count(*)']
             : (await db.Query(`SELECT count(*) FROM ${this.table} WHERE deleted = 0 `))[0]['count(*)'];
     }
 
-    static async Get (where : string, order_by = '', limit = '') : Promise<DataInterface[]> {
+    static async Get (where : string, order_by = '', limit = '') : Promise<{[k:string]: any}[]> {
         const db = new DB(this.table);
         db.Where(where);
         db.OrderBy(order_by);
@@ -32,10 +57,10 @@ class Classes {
             return obj;
         });
 
-        return data.length > 0 ? data : null;
+        return data;
     }
 
-    static async GetIncludeDeleted (where : string, order_by = '', limit = '') : Promise<DataInterface[]> {
+    static async GetIncludeDeleted (where : string, order_by = '', limit = '') : Promise<{[k:string]: any}[]> {
         const db = new DB(this.table);
         db.Where(where);
         db.OrderBy(order_by);
@@ -52,7 +77,7 @@ class Classes {
         return data.length > 0 ? data : null;
     }
 
-    static async GetFirst (where : string, order_by = '', limit = '') : Promise<DataInterface | null> {
+    static async GetFirst (where : string, order_by = '', limit = '') : Promise<{[k:string]: any} | null> {
         const db = new DB(this.table);
         db.Where(where);
         db.OrderBy(order_by);
@@ -69,7 +94,7 @@ class Classes {
         return data.length > 0 ? data[0] : null;
     }
 
-    static async GetFirstIncludeDeleted (where : string, order_by = '', limit = '') : Promise<DataInterface | null> {
+    static async GetFirstIncludeDeleted (where : string, order_by = '', limit = '') : Promise<{[k:string]: any} | null> {
         const db = new DB(this.table);
         db.Where(where);
         db.OrderBy(order_by);

@@ -11,6 +11,7 @@ exports.up = async function(database, utf8 = false) {
                 table.string('senha', 80).notNullable();
                 table.string('cpf', 11).notNullable();
 
+                table.integer('tipo').notNullable();
                 table.string('data_criacao', 35).notNullable();
 
                 table.string('indicado', 45);
