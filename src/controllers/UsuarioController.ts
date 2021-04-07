@@ -1,5 +1,6 @@
 import { Router } from 'express';
-import Usuario from '../classes/Usuario';
+import Usuario, { IUsuario } from '../classes/Usuario';
+import Sessao from '../classes/Sessao';
 import Util from '../System/Util';
 
 const routes = Router();
@@ -67,7 +68,6 @@ routes.post(`/usuario`, async (req, res) => {
         }
     }
 
-
     const create = await Usuario.Create(payload);
     if(create.status !== 1){
         resp.errors.push({
@@ -80,6 +80,71 @@ routes.post(`/usuario`, async (req, res) => {
     resp.status = 1;
     resp.msg = 'Usuário criado com sucesso!';
     resp.data = payload;
+    res.send(resp);
+});
+
+// [POST] => /login
+routes.post('/login', async (req, res) => {
+    const { body } = req;
+    const resp = {
+        status: 0,
+        msg: '',
+        data: null,
+        errors: []
+    };
+
+    const obrigatorios = ['email', 'senha'];
+
+    for (const campo of obrigatorios) {
+        if (['', undefined].includes(body[campo])) {
+            resp.errors.push({
+                msg: `O campo '${campo}' é obrigatório!`
+            });
+        }
+    }
+
+    if (resp.errors.length > 0) {
+        return res.status(400).send(resp);
+    }
+
+    const usuario = <IUsuario> await Usuario.GetFirst(`email = '${body.email}'`);
+
+    if (usuario === null) {
+        resp.errors.push({
+            msg: 'Usuário não existe'
+        });
+
+        return res.status(404).send(resp);
+    }
+
+    if (Util.Decrypt(usuario.senha, usuario.id) !== body.senha) {
+        resp.errors.push({
+            msg: 'Senha incorreta'
+        });
+
+        return res.status(400).send(resp);
+    }
+
+    const sessao = {
+        id: Util.GUID(),
+        usuario: usuario.id,
+        data_inicio: new Date().toJSON(),
+        ultima_data: new Date().toJSON()
+    };
+
+    const create = await Sessao.Create(sessao);
+
+    if (create.status !== 1) {
+        resp.errors.push({
+            msg: 'Erro ao gerar sessao!'
+        });
+        return res.status(500).send(resp);
+    }
+
+    resp.status = 1;
+    resp.msg = 'Login efetuado com sucesso';
+    resp.data = sessao.id;
+
     res.send(resp);
 });
 
