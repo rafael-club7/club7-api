@@ -1,5 +1,7 @@
 import Classes from '../System/Classes';
 import Util from '../System/Util';
+import { NextFunction, Request, Response } from 'express';
+import Usuario, { IUsuario } from './Usuario';
 
 export interface ISessao
 {
@@ -50,6 +52,64 @@ class Sessao extends Classes {
             status: 1,
             msg: 'Sessão válida'
         };
+    }
+
+    static async ValidarPermissao (req : Request, res : Response, next : NextFunction) : Promise<void> {
+        const { headers, path, method } = req;
+
+        const appId = '';
+
+        function matchExact (r, str) {
+            const match = str.match(r);
+            return match && str === match[0];
+        }
+
+        const open = [
+            { uri: /\/usuario/, method: 'post' },
+            { uri: /\/login/, method: 'post' },
+            { uri: /\/logout/, method: 'post' }
+        ];
+
+        // Não precisa de sessão
+        if (open.find(x => matchExact(x.uri, path) && method.toLowerCase() === x.method)) {
+            return next();
+        }
+
+        const sessao = await Sessao.Verificar(headers.authorization);
+        if (sessao.status !== 1) {
+            res.status(403).send({
+                status: 0,
+                errors: [
+                    { msg: sessao.msg }
+                ]
+            });
+            return;
+        }
+
+        const usuario = <IUsuario>(await Usuario.GetFirst(`id = '${sessao.data.usuario}'`));
+        if (usuario === null) {
+            res.status(403).send({
+                status: 0,
+                errors: [
+                    { msg: 'Usuário não encontrado' }
+                ]
+            });
+            return;
+        }
+
+        // Não precisa de sessão
+        const all = [
+            { uri: /\/sessao/, method: 'get' }
+        ];
+
+        if (!all.find(x => matchExact(x.uri, path) && method.toLowerCase() === x.method)) {
+            // TODO: Validar Assinatura
+            // TODO: Validar Permissoes
+        }
+
+        req.sessao = sessao;
+        req.usuario = usuario;
+        next();
     }
 
 }
