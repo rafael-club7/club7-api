@@ -60,7 +60,7 @@ class Mailer{
             
             this.transporter.sendMail(mailOptions, function(error, info){
                 if (error) {
-                    resolve(error);
+                    reject(error);
                 } else {
                     resolve(info);
                 }

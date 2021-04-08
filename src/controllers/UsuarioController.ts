@@ -30,19 +30,19 @@ routes.post(`/usuario`, async (req, res) => {
         nome_normalizado: Util.toNormal(body.nome),
         data_criacao: new Date().toJSON(),
     };
-    
+
     payload.senha = Util.Encrypt(body.senha, payload.id);
-    
-    if(!Util.validaCpf(body.cpf)){
+
+    if (!Util.validaCpf(body.cpf)) {
         resp.errors.push({
             msg: "CPF inválido!"
         });
         return res.status(400).send(resp);
     }
-    
-    if(!['', null, undefined].includes(body.indicado)){
+
+    if (!['', null, undefined].includes(body.indicado)) {
         const indicacaoExiste = await Usuario.GetFirst(`id = '${body.indicado}'`);
-        if(indicacaoExiste === null){
+        if (indicacaoExiste === null) {
             resp.errors.push({
                 msg: "Usuário de indicação não encontrado"
             });
@@ -51,14 +51,14 @@ routes.post(`/usuario`, async (req, res) => {
     }
 
     const usuarioExiste = await Usuario.GetFirst(`cpf = '${payload.cpf}' OR email = '${payload.email}'`);
-    if(usuarioExiste !== null){
-        if(usuarioExiste.email === payload.email){
+    if (usuarioExiste !== null) {
+        if (usuarioExiste.email === payload.email) {
             resp.errors.push({
                 msg: "Este email já está sendo utilizado"
             });
         }
-        
-        if(usuarioExiste.cpf === payload.cpf){
+
+        if (usuarioExiste.cpf === payload.cpf) {
             resp.errors.push({
                 msg: "Este CPF já está sendo utilizado"
             });
@@ -70,7 +70,7 @@ routes.post(`/usuario`, async (req, res) => {
     }
 
     const create = await Usuario.Create(payload);
-    if(create.status !== 1){
+    if (create.status !== 1) {
         resp.errors.push({
             msg: "Erro ao inserir usuário"
         });
@@ -108,7 +108,7 @@ routes.post('/login', async (req, res) => {
         return res.status(400).send(resp);
     }
 
-    const usuario = <IUsuario> await Usuario.GetFirst(`email = '${body.email}'`);
+    const usuario = <IUsuario>await Usuario.GetFirst(`email = '${body.email}'`);
 
     if (usuario === null) {
         resp.errors.push({
@@ -210,7 +210,7 @@ routes.post('/usuario/senha', async (req, res) => {
     }
 
     const usuario = await Usuario.GetFirst(`email = '${body.email}'`);
-    if(usuario === null){
+    if (usuario === null) {
         resp.errors.push({
             msg: "Email não encontrado!"
         });
@@ -218,16 +218,23 @@ routes.post('/usuario/senha', async (req, res) => {
     }
 
     const key = new Date().getTime() / 1000 | 0;
-    const link  = `${body.link}?id=${usuario.id}&key=${key}`;
-    
+    const link = `${body.link}?id=${usuario.id}&key=${key}`;
+
     const mail = new Mailer();
     const modeloEmail = Mailer.SolicitarNovaSenha(link);
     mail.to = body.email;
     mail.subject = modeloEmail.titulo;
     mail.message = modeloEmail.email;
-    const responseEmail = await mail.Send();
+
     // TODO: Criar Logs de tudo
-    
+
+    await mail.Send().catch(e => {
+        resp.errors.push({
+            msg: "Erro ao enviar o email"
+        });
+        res.status(500).send(resp);
+    });
+
     resp.status = 1;
     resp.msg = "Nova senha solicitada com sucesso!";
     res.send(resp);
