@@ -185,7 +185,7 @@ routes.post('/logout', async (req, res) => {
     res.send(resp);
 });
 
-// [POST] => /senha
+// [POST] => /usuario/senha
 routes.post('/usuario/senha', async (req, res) => {
     const { body } = req;
     const resp = {
@@ -235,8 +235,68 @@ routes.post('/usuario/senha', async (req, res) => {
         res.status(500).send(resp);
     });
 
+    Usuario.Update({ mudar_senha: key }, `id = '${usuario.id}'`);
+
     resp.status = 1;
     resp.msg = "Nova senha solicitada com sucesso!";
+    res.send(resp);
+});
+
+// [PUT] => /usuario/senha
+routes.put("/usuario/senha", async (req, res) => {
+    const { body } = req;
+    const resp = {
+        status: 0,
+        msg: '',
+        data: null,
+        errors: []
+    };
+
+    const obrigatorios = [ 'senha', 'id', 'key' ];
+
+    for (const campo of obrigatorios) {
+        if (['', undefined].includes(body[campo])) {
+            resp.errors.push({
+                msg: `O campo '${campo}' é obrigatório!`
+            });
+        }
+    }
+
+    if (resp.errors.length > 0) {
+        return res.status(400).send(resp);
+    }
+
+    const usuario = await Usuario.GetFirst(`id = '${body.id}'`);
+
+    if(usuario === null){
+        resp.errors.push({
+            msg: "Usuário não encontrado."
+        });
+        
+        res.status(404).send(resp);
+        return;
+    }
+    
+    if(Number(usuario.mudar_senha) === 0 || usuario.mudar_senha !== Number(body.key)){
+        resp.errors.push({
+            msg: "Link inválido ou expirado: Solicite nova senha novamente!"
+        });
+        return res.status(401).send(resp);        
+    }
+
+    const data = { senha: Util.Encrypt(body.senha, usuario.id), mudar_senha: 0 };
+
+    const atualizarSenha = await Usuario.Update(data, `id = '${usuario.id}'`);
+
+    if(atualizarSenha.status !== 1){
+        resp.errors.push({
+            msg: "Erro ao alterar senha"
+        });
+        return res.status(500).send(resp);
+    }
+    
+    resp.status = 1;
+    resp.msg = "Senha atualizada com sucesso!";
     res.send(resp);
 });
 

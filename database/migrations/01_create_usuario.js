@@ -16,6 +16,7 @@ exports.up = async function(database, utf8 = false) {
 
                 table.string('indicado', 45);
                 table.foreign('indicado').references('id').inTable('usuario');
+                table.integer('mudar_senha').defaultTo(0);
 
                 table.integer('status').defaultTo(1);
                 table.integer('deleted').defaultTo(0);
