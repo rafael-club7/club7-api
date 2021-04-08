@@ -232,9 +232,12 @@ routes.post('/usuario/senha', async (req, res) => {
         resp.errors.push({
             msg: "Erro ao enviar o email"
         });
-        res.status(500).send(resp);
+        console.error(e);
     });
-
+    
+    if(resp.errors.length > 0)
+        return res.status(500).send(resp);
+    
     Usuario.Update({ mudar_senha: key }, `id = '${usuario.id}'`);
 
     resp.status = 1;
