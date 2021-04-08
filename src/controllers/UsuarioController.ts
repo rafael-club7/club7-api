@@ -2,6 +2,7 @@ import { Router } from 'express';
 import Usuario, { IUsuario } from '../classes/Usuario';
 import Sessao from '../classes/Sessao';
 import Util from '../System/Util';
+import Mailer from '../System/Mailer';
 
 const routes = Router();
 
@@ -184,5 +185,52 @@ routes.post('/logout', async (req, res) => {
     res.send(resp);
 });
 
+// [POST] => /senha
+routes.post('/usuario/senha', async (req, res) => {
+    const { body } = req;
+    const resp = {
+        status: 0,
+        msg: '',
+        data: null,
+        errors: []
+    };
+
+    const obrigatorios = ['email', 'link'];
+
+    for (const campo of obrigatorios) {
+        if (['', undefined].includes(body[campo])) {
+            resp.errors.push({
+                msg: `O campo '${campo}' é obrigatório!`
+            });
+        }
+    }
+
+    if (resp.errors.length > 0) {
+        return res.status(400).send(resp);
+    }
+
+    const usuario = await Usuario.GetFirst(`email = '${body.email}'`);
+    if(usuario === null){
+        resp.errors.push({
+            msg: "Email não encontrado!"
+        });
+        return res.status(404).send(resp);
+    }
+
+    const key = new Date().getTime() / 1000 | 0;
+    const link  = `${body.link}?id=${usuario.id}&key=${key}`;
+    
+    const mail = new Mailer();
+    const modeloEmail = Mailer.SolicitarNovaSenha(link);
+    mail.to = body.email;
+    mail.subject = modeloEmail.titulo;
+    mail.message = modeloEmail.email;
+    const responseEmail = await mail.Send();
+    // TODO: Criar Logs de tudo
+    
+    resp.status = 1;
+    resp.msg = "Nova senha solicitada com sucesso!";
+    res.send(resp);
+});
 
 export default routes;

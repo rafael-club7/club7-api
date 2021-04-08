@@ -57,9 +57,7 @@ class Sessao extends Classes {
     static async ValidarPermissao (req : Request, res : Response, next : NextFunction) : Promise<void> {
         const { headers, path, method } = req;
 
-        const appId = '';
-
-        function matchExact (r, str) {
+        function matchExact (r: RegExp, str: string) {
             const match = str.match(r);
             return match && str === match[0];
         }
