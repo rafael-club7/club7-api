@@ -120,20 +120,33 @@ class Sessao extends Classes {
             // TODO: Melhorar Permissoes
             
             let permissoes = [
-                { uri: /\/usuario\/[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?/, nethod: 'get' },
-                { uri: /\/usuario\/[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?/, nethod: 'put' },
-                { uri: /\/usuario\/[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?/, nethod: 'delete' },
+                // Usuario
+                { uri: /\/usuario\/[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?/, method: 'get' },
+                { uri: /\/usuario\/[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?/, method: 'put' },
+                { uri: /\/usuario\/[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?/, method: 'delete' },
+                
+                // Plano
+                { uri: /\/plano/, method: 'get' },
+                { uri: /\/plano\/[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?/, method: 'get' },
             ];
-
+            
             // ADMIN
             if([ 9 ].includes(usuario.tipo)){
                 permissoes = [
                     ...permissoes,
-                    { uri: /\/usuario/, nethod: 'get' },
+                    
+                    // Usuario
+                    { uri: /\/usuario/, method: 'get' },
+                    
+                    // Plano
+                    { uri: /\/plano/, method: 'post' },
+                    { uri: /\/plano\/[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?/, method: 'put' },
+                    { uri: /\/plano\/[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?/, method: 'delete' },
+
                 ];
             }
 
-            if(!permissoes.find(acao => matchExact(acao.uri, path))){
+            if(!permissoes.find(x => matchExact(x.uri, path) && method.toLowerCase() === x.method)){
                 res.status(401).send({
                     status: 0,
                     errors: [

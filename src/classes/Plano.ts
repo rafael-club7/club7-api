@@ -5,7 +5,7 @@ export interface IPlano
     id: string;
     nome: string;
     nome_normalizado: string;
-    valor: number;
+    valor: number|string;
     status: string|number;
 }
 

@@ -15,26 +15,22 @@ class Classes {
     static async Validate (data: {[k:string]: any}) : Promise<{ msg: string; }[]> {
         const errors = [];
 
-        for (const field in data) {
-            const _field = this.fields.find(x => x.name === field);
+        for(const field of this.fields){
+            
+            if ((typeof data[field.name] === 'undefined' || [null, ''].includes(<string>data[field.name])) && field.required) {
+                errors.push({
+                    msg: `Campo '${field.name}' é obrigatório!`
+                });
+            } 
 
-            if (_field) {
-                if ((typeof data[field] === 'undefined' || [null, ''].includes(<string>data[field])) && _field.required) {
-                    errors.push({
-                        msg: `Campo '${field}' é obrigatório!`
-                    });
-                }
-
-                if (typeof data[field] !== _field.type) {
-                    errors.push({
-                        msg: `Campo '${field}' precisa ser do tipo '${_field.type}'!`
-                    });
-                }
+            if (!(typeof data[field.name] === 'undefined' || [null, ''].includes(<string>data[field.name])) && typeof data[field.name] !== field.type) {
+                errors.push({
+                    msg: `Campo '${field.name}' precisa ser do tipo '${field.type}'!`
+                });
             }
         }
 
-        return errors;
-    }
+        return errors;    }
 
     static async Count (where : string) : Promise<string> {
         const db = new DB(this.table);
