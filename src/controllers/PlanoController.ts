@@ -103,6 +103,60 @@ routes.get('/plano/:id', async (req, res) => {
 });
 
 // [PUT] => /plano/:id
+routes.put('/plano/:id', async (req, res) => {
+    const { params, body } = req;
+    const resp = {
+        status: 0,
+        msg: '',
+        data: null,
+        errors: []
+    };
+
+    const planoGet = <IPlano> await Plano.GetFirst(`id = '${params.id}'`);
+
+    if (planoGet === null) {
+        resp.errors.push({
+            msg: 'Plano não encontrado!'
+        });
+        return res.status(404).send(resp);
+    }
+
+    const data : { [k: string] : any} = {};
+    const proibidos = ['id', 'status'];
+    let edit = false;
+
+    Plano.fields.forEach(campo => {
+        if (body[campo.name] !== undefined && !proibidos.includes(campo.name)) {
+            data[campo.name] = body[campo.name];
+            if (campo.name === 'nome') {
+                data.nome_normalizado = Util.toNormal(body[campo.name]);
+            }
+            edit = true;
+        }
+    });
+
+    if (!edit) {
+        resp.errors.push({
+            msg: 'Nada para editar'
+        });
+        return res.status(400).send(resp);
+    }
+
+    const update = await Plano.Update(data, `id = '${params.id}'`);
+
+    if (update.status !== 1) {
+        resp.errors.push({
+            msg: 'Não foi possivel atualizar'
+        });
+
+        return res.status(500).send(resp);
+    }
+
+    resp.status = 1;
+    resp.msg = 'Atualizado com sucesso';
+    res.send(resp);
+});
+
 // [DELETE] => /plano/:id
 
 
