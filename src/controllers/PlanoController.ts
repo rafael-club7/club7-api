@@ -56,8 +56,29 @@ routes.post('/plano', async (req, res) => {
     res.send(resp);
 });
 
-
 // [GET] => /plano
+routes.get('/plano', async (req, res) => {
+    const { query } = req;
+    const resp = {
+        status: 0,
+        msg: '',
+        data: null,
+        errors: []
+    };
+
+    const where = (query.where) ? Util.utf8Decode(unescape(String(query.where))) : '';
+    const order_by = String((query.order_by) ? query.order_by : '');
+    const limit = String((query.limit) ? query.limit : '');
+
+    const planos = <IPlano[]> await Plano.Get(where, order_by, limit);
+
+    res.set('X-TOTAL-COUNT', await Plano.Count(where));
+
+    resp.status = 1;
+    resp.data = planos;
+    res.send(resp);
+});
+
 // [GET] => /plano/:id
 // [PUT] => /plano/:id
 // [DELETE] => /plano/:id
