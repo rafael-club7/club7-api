@@ -326,4 +326,51 @@ routes.get(`/usuario`, async (req, res) => {
     res.send(resp);
 });
 
+// [GET] => /usuario/perfil
+routes.get('/usuario/perfil', async (req, res) => {
+    const resp = {
+        status: 0,
+        msg: '',
+        data: null,
+        errors: []
+    };
+
+    const usuario = <IUsuario> await Usuario.GetFirst(`id = '${req.usuario.id}'`);
+
+    if (usuario === null) {
+        resp.errors.push({
+            msg: 'Usuário não encontrado!'
+        });
+        return res.status(404).send(resp);
+    }
+
+    resp.status = 1;
+    resp.data = usuario;
+    res.send(resp);
+});
+
+// [GET] => /usuario/:id
+routes.get('/usuario/:id', async (req, res) => {
+    const { params } = req;
+    const resp = {
+        status: 0,
+        msg: '',
+        data: null,
+        errors: []
+    };
+
+    const usuario = <IUsuario> await Usuario.GetFirst(`id = '${params.id}'`);
+
+    if (usuario === null) {
+        resp.errors.push({
+            msg: 'Usuário não encontrado!'
+        });
+        return res.status(404).send(resp);
+    }
+
+    resp.status = 1;
+    resp.data = usuario;
+    res.send(resp);
+});
+
 export default routes;
