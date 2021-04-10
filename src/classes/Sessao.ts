@@ -108,31 +108,28 @@ class Sessao extends Classes {
         // Não precisa de permissao
         const all = [
             { uri: /\/sessao/, method: 'get' },
-            { uri: /\/usuario\/senha/, method: 'post' },
-            { uri: /\/usuario\/senha/, method: 'put' },
+            { uri: /\/nova-senha/, method: 'post' },
+            { uri: /\/nova-senha/, method: 'put' },
         ];
 
         if (!all.find(x => matchExact(x.uri, path) && method.toLowerCase() === x.method)) {
             // TODO: Validar Assinatura
             
 
-            let permissoes = [];
-            
+                       
             // TODO: Melhorar Permissoes
             
+            let permissoes = [
+                { uri: /\/usuario\/[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?/, nethod: 'get' },
+                { uri: /\/usuario\/[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?/, nethod: 'put' },
+                { uri: /\/usuario\/[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?/, nethod: 'delete' },
+            ];
+
             // ADMIN
             if([ 9 ].includes(usuario.tipo)){
                 permissoes = [
+                    ...permissoes,
                     { uri: /\/usuario/, nethod: 'get' },
-                    { uri: /\/usuario\/[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?/, nethod: 'get' },
-                    { uri: /\/usuario\/[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?/, nethod: 'put' },
-                    { uri: /\/perfil/, nethod: 'get' },
-                    { uri: /\/perfil/, nethod: 'put' },
-                ];
-            }else{
-                permissoes = [
-                    { uri: /\/perfil/, nethod: 'get' },
-                    { uri: /\/perfil/, nethod: 'put' },
                 ];
             }
 
