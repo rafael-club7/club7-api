@@ -80,6 +80,28 @@ routes.get('/plano', async (req, res) => {
 });
 
 // [GET] => /plano/:id
+routes.get('/plano/:id', async (req, res) => {
+    const { params } = req;
+    const resp = {
+        status: 0,
+        data: null,
+        errors: []
+    };
+
+    const plano = <IPlano> await Plano.GetFirst(`id = '${params.id}'`);
+
+    if (plano === null) {
+        resp.errors.push({
+            msg: 'Plano não encontrado!'
+        });
+        return res.status(404).send(resp);
+    }
+
+    resp.status = 1;
+    resp.data = plano;
+    res.send(resp);
+});
+
 // [PUT] => /plano/:id
 // [DELETE] => /plano/:id
 
