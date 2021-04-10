@@ -158,6 +158,37 @@ routes.put('/plano/:id', async (req, res) => {
 });
 
 // [DELETE] => /plano/:id
+routes.delete('/plano/:id', async (req, res) => {
+    const { params } = req;
+    const resp = {
+        status: 0,
+        msg: '',
+        data: null,
+        errors: []
+    };
 
+    const planoGet = <IPlano> await Plano.GetFirst(`id = '${params.id}'`);
+
+    if (planoGet === null) {
+        resp.errors.push({
+            msg: 'Plano não encontrado!'
+        });
+        return res.status(404).send(resp);
+    }
+
+    const del = await Plano.Delete(`id = '${params.id}'`);
+
+    if (del.status !== 1) {
+        resp.errors.push({
+            msg: 'Não foi possivel excluir'
+        });
+
+        return res.status(500).send(resp);
+    }
+
+    resp.status = 1;
+    resp.msg = 'Excluido com sucesso';
+    res.send(resp);
+});
 
 export default routes;
