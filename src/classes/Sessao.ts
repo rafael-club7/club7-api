@@ -125,11 +125,14 @@ class Sessao extends Classes {
                 permissoes = [
                     { uri: /\/usuario/, nethod: 'get' },
                     { uri: /\/usuario\/[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?/, nethod: 'get' },
-                    { uri: /\/usuario\/perfil/, nethod: 'get' },
+                    { uri: /\/usuario\/[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?/, nethod: 'put' },
+                    { uri: /\/perfil/, nethod: 'get' },
+                    { uri: /\/perfil/, nethod: 'put' },
                 ];
             }else{
                 permissoes = [
-                    { uri: /\/usuario\/perfil/, nethod: 'get' },
+                    { uri: /\/perfil/, nethod: 'get' },
+                    { uri: /\/perfil/, nethod: 'put' },
                 ];
             }
 

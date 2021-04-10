@@ -326,29 +326,6 @@ routes.get(`/usuario`, async (req, res) => {
     res.send(resp);
 });
 
-// [GET] => /usuario/perfil
-routes.get('/usuario/perfil', async (req, res) => {
-    const resp = {
-        status: 0,
-        msg: '',
-        data: null,
-        errors: []
-    };
-
-    const usuario = <IUsuario> await Usuario.GetFirst(`id = '${req.usuario.id}'`);
-
-    if (usuario === null) {
-        resp.errors.push({
-            msg: 'Usuário não encontrado!'
-        });
-        return res.status(404).send(resp);
-    }
-
-    resp.status = 1;
-    resp.data = usuario;
-    res.send(resp);
-});
-
 // [GET] => /usuario/:id
 routes.get('/usuario/:id', async (req, res) => {
     const { params } = req;
@@ -370,6 +347,106 @@ routes.get('/usuario/:id', async (req, res) => {
 
     resp.status = 1;
     resp.data = usuario;
+    res.send(resp);
+});
+
+// [PUT] => /usuario/:id
+routes.put('/usuario/:id', async (req, res) => {
+    const { params, body } = req;
+    const resp = {
+        status: 0,
+        msg: '',
+        data: null,
+        errors: []
+    };
+
+    const usuarioGet = await Usuario.GetFirst(`id = '${params.id}'`);
+
+    if (usuarioGet === null) {
+        resp.errors.push({
+            msg: 'Usuário não encontrado!'
+        });
+        return res.status(404).send(resp);
+    }
+
+
+    const data : { [k: string] : any} = {};
+    const proibidos = ['id', 'status', 'tipo'];
+    let edit = false;
+
+    Usuario.fields.forEach(campo => {
+        if (body[campo.name] !== undefined && !proibidos.includes(campo.name)) {
+            data[campo.name] = body[campo.name];
+            if (campo.name === 'nome') {
+                data.nome_normalizado = Util.toNormal(body[campo.name]);
+            }
+            if (campo.name === 'senha') {
+                data[campo.name] = Util.Encrypt(body[campo.name], params.id);
+            }
+            edit = true;
+        }
+    });
+
+    if (!edit) {
+        resp.errors.push({
+            msg: 'Nada para editar'
+        });
+        return res.status(400).send(resp);
+    }
+
+    const update = await Usuario.Update(data, `id = '${params.id}'`);
+
+    if (update.status !== 1) {
+        resp.errors.push({
+            msg: 'Não foi possivel atualizar'
+        });
+
+        return res.status(500).send(resp);
+    }
+
+    resp.status = 1;
+    resp.msg = 'Atualizado com sucesso';
+    res.send(resp);
+});
+
+// [DELETE] => /usuario/:id
+routes.delete('/usuario/:id', async (req, res) => {
+    const { params } = req;
+    const resp = {
+        status: 0,
+        msg: '',
+        data: null,
+        errors: []
+    };
+
+    if(req.usuario.tipo !== 9 && req.usuario.id !== params.id){
+        resp.errors.push({
+            msg: "Você não tem permissão para excluir esse usuário!"
+        });
+        return res.status(403).send(resp);
+    }
+
+    const usuarioGet = <IUsuario> await Usuario.GetFirst(`id = '${params.id}'`);
+
+    if (usuarioGet === null) {
+        resp.errors.push({
+            msg: 'Usuário não encontrado!'
+        });
+        return res.status(404).send(resp);
+    }
+
+    const del = await Usuario.Delete(`id = '${params.id}'`);
+
+    if (del.status !== 1) {
+        resp.errors.push({
+            msg: 'Não foi possivel excluir'
+        });
+
+        return res.status(500).send(resp);
+    }
+
+    resp.status = 1;
+    resp.msg = 'Excluido com sucesso';
     res.send(resp);
 });
 
