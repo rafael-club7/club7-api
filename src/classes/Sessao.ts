@@ -73,6 +73,16 @@ class Sessao extends Classes {
             return next();
         }
 
+        if (headers['authorization'] === undefined) {
+            res.status(403).send({
+                status: 0,
+                errors: [
+                    { msg: 'O header "authorization" é obrigatório!' }
+                ]
+            });
+            return;
+        }
+
         const sessao = await Sessao.Verificar(headers.authorization);
         if (sessao.status !== 1) {
             res.status(403).send({
@@ -95,14 +105,46 @@ class Sessao extends Classes {
             return;
         }
 
-        // Não precisa de sessão
+        // Não precisa de permissao
         const all = [
-            { uri: /\/sessao/, method: 'get' }
+            { uri: /\/sessao/, method: 'get' },
+            { uri: /\/usuario\/senha/, method: 'post' },
+            { uri: /\/usuario\/senha/, method: 'put' },
         ];
 
         if (!all.find(x => matchExact(x.uri, path) && method.toLowerCase() === x.method)) {
             // TODO: Validar Assinatura
-            // TODO: Validar Permissoes
+            
+
+            let permissoes = [];
+            
+            // TODO: Melhorar Permissoes
+            
+            // ADMIN
+            if([ 9 ].includes(usuario.tipo)){
+                permissoes = [
+                    { uri: /\/usuario/, nethod: 'get' },
+                    { uri: /\/usuario\/.*/, nethod: 'get' },
+                ];
+            }else{
+                permissoes = [
+                    { uri: /\/usuario\/.*/, nethod: 'get' },
+                ];
+            }
+
+            if(!permissoes.find(acao => matchExact(acao.uri, path))){
+                res.status(401).send({
+                    status: 0,
+                    errors: [
+                        {
+                            msg: 'Você não tem permissão para acessar esse método!'
+                        }
+                    ]
+                });
+                return;
+            }
+
+            
         }
 
         req.sessao = sessao;
