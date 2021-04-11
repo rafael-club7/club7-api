@@ -128,6 +128,9 @@ class Sessao extends Classes {
                 // Plano
                 { uri: /\/plano/, method: 'get' },
                 { uri: /\/plano\/[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?/, method: 'get' },
+                
+                // Categoria Estabelecimento
+                { uri: /\/categoria-estabelecimento/, method: 'get' },
             ];
             
             // ADMIN
@@ -142,7 +145,12 @@ class Sessao extends Classes {
                     { uri: /\/plano/, method: 'post' },
                     { uri: /\/plano\/[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?/, method: 'put' },
                     { uri: /\/plano\/[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?/, method: 'delete' },
-
+                    
+                    // Categoria Estabelecimento
+                    { uri: /\/categoria-estabelecimento\/[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?/, method: 'get' },
+                    { uri: /\/categoria-estabelecimento/, method: 'post' },
+                    { uri: /\/categoria-estabelecimento\/[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?/, method: 'put' },
+                    { uri: /\/categoria-estabelecimento\/[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?/, method: 'delete' },
                 ];
             }
 

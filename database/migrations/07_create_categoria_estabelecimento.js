@@ -7,8 +7,8 @@ exports.up = async function(database, utf8 = false) {
                 table.string('id', 45).primary();
                 table.string('nome', 45).notNullable();
                 table.string('nome_normalizado', 45).notNullable();
-                table.string('icone', 50).notNullable();
-
+                table.string('icone', 50);
+                table.integer('status').defaultTo(1);
                 table.integer('deleted').defaultTo(0);
             });
         }
