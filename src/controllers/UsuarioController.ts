@@ -187,6 +187,16 @@ routes.put('/usuario/:id', async (req, res) => {
         return res.status(400).send(resp);
     }
 
+    if(body.cpf !== undefined){
+        const cpfExiste = await Usuario.GetFirst(`cpf = '${body.cpf}'`);
+        if(cpfExiste !== null){
+            resp.errors.push({
+                msg: "Já existe um usuário com esse cpf!"
+            });
+            return res.status(400).send(resp);
+        }
+    }
+
     const update = await Usuario.Update(data, `id = '${params.id}'`);
 
     if (update.status !== 1) {

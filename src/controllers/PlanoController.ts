@@ -142,6 +142,16 @@ routes.put('/plano/:id', async (req, res) => {
         return res.status(400).send(resp);
     }
 
+    if(body.nome !== undefined){
+        const nomeExiste = await Plano.GetFirst(`nome = '${body.nome}'`);
+        if(nomeExiste !== null){
+            resp.errors.push({
+                msg: "Já existe um plano com esse nome!"
+            });
+            return res.status(400).send(resp);
+        }
+    }
+
     const update = await Plano.Update(data, `id = '${params.id}'`);
 
     if (update.status !== 1) {
