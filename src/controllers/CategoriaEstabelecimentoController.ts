@@ -55,6 +55,27 @@ routes.post('/categoria-estabelecimento', async (req, res) => {
 });
 
 // [GET] => /categoria-estabelecimento
+routes.get('/categoria-estabelecimento', async (req, res) => {
+    const { query } = req;
+    const resp = {
+        status: 0,
+        msg: '',
+        data: null,
+        errors: []
+    };
+
+    const where = (query.where) ? Util.utf8Decode(unescape(String(query.where))) : '';
+    const order_by = String((query.order_by) ? query.order_by : '');
+    const limit = String((query.limit) ? query.limit : '');
+
+    const categorias = <ICategoriaEstabelecimento[]> await CategoriaEstabelecimento.Get(where, order_by, limit);
+
+    res.set('X-TOTAL-COUNT', await CategoriaEstabelecimento.Count(where));
+
+    resp.status = 1;
+    resp.data = categorias;
+    res.send(resp);
+});
 
 // [GET] => /categoria-estabelecimento/:id
 
