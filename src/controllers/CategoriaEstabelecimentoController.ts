@@ -166,5 +166,37 @@ routes.put('/categoria-estabelecimento/:id', async (req, res) => {
 });
 
 // [DELETE] => /categoria-estabelecimento/:id
+routes.delete('/categoria-estabelecimento/:id', async (req, res) => {
+    const { params } = req;
+    const resp = {
+        status: 0,
+        msg: '',
+        data: null,
+        errors: []
+    };
+
+    const planoGet = <ICategoriaEstabelecimento> await CategoriaEstabelecimento.GetFirst(`id = '${params.id}'`);
+
+    if (planoGet === null) {
+        resp.errors.push({
+            msg: 'Categoria de Estabelecimento não encontrada!'
+        });
+        return res.status(404).send(resp);
+    }
+
+    const del = await CategoriaEstabelecimento.Delete(`id = '${params.id}'`);
+
+    if (del.status !== 1) {
+        resp.errors.push({
+            msg: 'Não foi possivel excluir'
+        });
+
+        return res.status(500).send(resp);
+    }
+
+    resp.status = 1;
+    resp.msg = 'Excluido com sucesso';
+    res.send(resp);
+});
 
 export default routes;
