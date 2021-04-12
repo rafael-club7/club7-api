@@ -180,11 +180,10 @@ routes.put('/usuario/:id', async (req, res) => {
         return res.status(404).send(resp);
     }
 
-
     const data : { [k: string] : any} = {};
-    const proibidos = ['id', 'status', 'tipo'];
+    const proibidos = ['id', 'status', 'tipo', 'rua', 'numero', 'bairro', 'cidade', 'estado', 'complemento', 'cep'];
     let edit = false;
-
+    
     Usuario.fields.forEach(campo => {
         if (body[campo.name] !== undefined && !proibidos.includes(campo.name)) {
             data[campo.name] = body[campo.name];
