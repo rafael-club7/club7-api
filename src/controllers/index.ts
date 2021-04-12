@@ -5,6 +5,7 @@ import UsuarioController from './UsuarioController';
 import SessaoController from './SessaoController';
 import PlanoController from './PlanoController';
 import CategoriaEstabelecimentoController from './CategoriaEstabelecimentoController';
+import EstabelecimentoController from './EstabelecimentoController';
 
 const routes = Router();
 
@@ -13,7 +14,8 @@ const routes = Router();
     SessaoController, 
     AutorizacaoController, 
     PlanoController, 
-    CategoriaEstabelecimentoController 
+    CategoriaEstabelecimentoController,
+    EstabelecimentoController
 ].forEach((route) => {
     routes.stack = [...routes.stack, ...route.stack];
 });

@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import CategoriaEstabelecimento from '../classes/CategoriaEstabelecimento';
 import Usuario, { IUsuario } from '../classes/Usuario';
 import Util from '../System/Util';
 
@@ -17,25 +18,33 @@ routes.post(`/usuario`, async (req, res) => {
 
     resp.errors = await Usuario.Validate(body);
 
-    if (resp.errors.length > 0) {
+    if (resp.errors.length > 0)
         return res.status(400).send(resp);
-    }
-
-    const payload = {
+        
+    const payload : IUsuario = {
         id: Util.GUID(),
         ...body,
-        cpf: body.cpf.toString().replace(/\D+/g, ''),
         nome_normalizado: Util.toNormal(body.nome),
         data_criacao: new Date().toJSON(),
+        cpf: body.tipo === 1 ? body.cpf.toString().replace(/\D/g, '') : null,
+        cnpj: body.tipo === 2 ? body.cnpj.toString().replace(/\D/g, '') : null,
     };
 
     payload.senha = Util.Encrypt(body.senha, payload.id);
 
-    if (!Util.validaCpf(body.cpf)) {
-        resp.errors.push({
-            msg: "CPF inválido!"
-        });
-        return res.status(400).send(resp);
+    if(payload.tipo === 2){
+        const CepCoords = require("coordenadas-do-cep");
+        const coordenadas = await CepCoords.getByEndereco(`${payload.estado}, ${payload.rua} ${payload.numero}`);
+        payload.latitude = coordenadas.lat;
+        payload.longitude = coordenadas.lon;
+
+        const categoriaExiste = await CategoriaEstabelecimento.GetFirst(`id = '${payload.categoria}'`);
+        if(categoriaExiste === null){
+            resp.errors.push({
+                msg: "Categoria não encontrada!"
+            });
+            return res.status(404).send(resp);
+        }
     }
 
     if (!['', null, undefined].includes(body.indicado)) {
@@ -48,7 +57,7 @@ routes.post(`/usuario`, async (req, res) => {
         }
     }
 
-    const usuarioExiste = await Usuario.GetFirst(`cpf = '${payload.cpf}' OR email = '${payload.email}'`);
+    const usuarioExiste = await Usuario.GetFirst(`email = '${payload.email}' ${payload.tipo === 1 ? `OR cpf = '${payload.cpf}'`: ''} ${payload.tipo === 2 ? `OR cnpj = '${payload.cnpj}'`: ''}`);
     if (usuarioExiste !== null) {
         if (usuarioExiste.email === payload.email) {
             resp.errors.push({
@@ -56,10 +65,20 @@ routes.post(`/usuario`, async (req, res) => {
             });
         }
 
-        if (usuarioExiste.cpf === payload.cpf) {
-            resp.errors.push({
-                msg: "Este CPF já está sendo utilizado"
-            });
+        if(payload.tipo === 1){
+            if (usuarioExiste.cpf === payload.cpf) {
+                resp.errors.push({
+                    msg: "Este CPF já está sendo utilizado"
+                });
+            }
+        }
+         
+        if(payload.tipo === 2){
+            if (usuarioExiste.cnpj === payload.cnpj) {
+                resp.errors.push({
+                    msg: "Este CNPJ já está sendo utilizado"
+                });
+            }
         }
 
         if (resp.errors.length > 0) {
@@ -74,7 +93,6 @@ routes.post(`/usuario`, async (req, res) => {
         });
         return res.status(500).send(resp);
     }
-
 
     resp.status = 1;
     resp.msg = 'Usuário criado com sucesso!';

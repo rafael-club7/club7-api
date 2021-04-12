@@ -64,6 +64,7 @@ class Sessao extends Classes {
 
         const open = [
             { uri: /\/usuario/, method: 'post' },
+            { uri: /\/estabelecimento/, method: 'post' },
             { uri: /\/login/, method: 'post' },
             { uri: /\/logout/, method: 'post' }
         ];
@@ -131,10 +132,28 @@ class Sessao extends Classes {
                 
                 // Categoria Estabelecimento
                 { uri: /\/categoria-estabelecimento/, method: 'get' },
+                { uri: /\/categoria-estabelecimento\/[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?/, method: 'get' },
+                
+                // Estabelecimento
+                { uri: /\/estabelecimento/, method: 'get' },
+                { uri: /\/estabelecimento\/[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?/, method: 'get' },
             ];
             
+            // Estabelecimento
+            if([ 9, 2 ].includes(usuario.tipo)){
+                permissoes = [
+                    ...permissoes,
+
+                    // Estabelecimento
+                    { uri: /\/estabelecimento/, method: 'post' },
+                    { uri: /\/estabelecimento\/[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?/, method: 'put' },
+                    { uri: /\/estabelecimento\/[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?/, method: 'delete' },
+                ];
+            }
+
+
             // ADMIN
-            if([ 9 ].includes(usuario.tipo)){
+            if(usuario.tipo === 9){
                 permissoes = [
                     ...permissoes,
                     
@@ -147,10 +166,10 @@ class Sessao extends Classes {
                     { uri: /\/plano\/[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?/, method: 'delete' },
                     
                     // Categoria Estabelecimento
-                    { uri: /\/categoria-estabelecimento\/[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?/, method: 'get' },
                     { uri: /\/categoria-estabelecimento/, method: 'post' },
                     { uri: /\/categoria-estabelecimento\/[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?/, method: 'put' },
                     { uri: /\/categoria-estabelecimento\/[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?/, method: 'delete' },
+                                        
                 ];
             }
 

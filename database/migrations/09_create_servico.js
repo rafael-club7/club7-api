@@ -12,7 +12,7 @@ exports.up = async function(database, utf8 = false) {
                 table.integer('tipo').notNullable();
 
                 table.string('estabelecimento', 45).notNullable();
-                table.foreign('estabelecimento').references('id').inTable('estabelecimento');
+                table.foreign('estabelecimento').references('id').inTable('usuario');
 
                 table.integer('status').defaultTo(1);
                 table.integer('deleted').defaultTo(0);
