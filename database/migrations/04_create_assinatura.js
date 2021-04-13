@@ -7,7 +7,9 @@ exports.up = async function(database, utf8 = false) {
 
                 table.string('usuario', 45).notNullable();
                 table.string('plano', 45).notNullable();
-                table.string('cartao', 45).notNullable();
+
+                table.integer('forma_pagamento').notNullable();
+                table.string('cartao', 45);
 
                 table.decimal('valor', 14, 2).notNullable();
                 table.string('data_inicio', 30).notNullable();

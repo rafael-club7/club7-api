@@ -8,6 +8,7 @@ export interface IUsuario {
     email: string;
     senha: string;
     cpf: string;
+    celular: string;
     data_criacao: string;
     indicado: string;
     tipo: number;
@@ -37,6 +38,7 @@ class Usuario extends Classes {
         { name: 'id', type: 'string', required: false },
         { name: 'nome', type: 'string', required: true },
         { name: 'nome_normalizado', type: 'string', required: false },
+        { name: 'celular', type: 'string', required: true },
         { name: 'email', type: 'string', required: true },
         { name: 'senha', type: 'string', required: true },
         { name: 'cpf', type: 'string', required: false },

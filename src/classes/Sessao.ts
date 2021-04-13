@@ -137,21 +137,27 @@ class Sessao extends Classes {
                 // Estabelecimento
                 { uri: /\/estabelecimento/, method: 'get' },
                 { uri: /\/estabelecimento\/[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?/, method: 'get' },
+
+                // Assinatura
+                { uri: /\/assinatura/, method: 'post' },
+                { uri: /\/assinatura\/[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?/, method: 'get' },
+                { uri: /\/assinatura\/[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?/, method: 'put' },
+                { uri: /\/assinatura\/[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?/, method: 'delete' },
             ];
             
             // Estabelecimento
             if([ 9, 2 ].includes(usuario.tipo)){
                 permissoes = [
                     ...permissoes,
-
+                    
                     // Estabelecimento
                     { uri: /\/estabelecimento/, method: 'post' },
                     { uri: /\/estabelecimento\/[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?/, method: 'put' },
                     { uri: /\/estabelecimento\/[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?/, method: 'delete' },
                 ];
             }
-
-
+            
+            
             // ADMIN
             if(usuario.tipo === 9){
                 permissoes = [
@@ -169,10 +175,12 @@ class Sessao extends Classes {
                     { uri: /\/categoria-estabelecimento/, method: 'post' },
                     { uri: /\/categoria-estabelecimento\/[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?/, method: 'put' },
                     { uri: /\/categoria-estabelecimento\/[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?/, method: 'delete' },
-                                        
+                    
+                    // Assinatura
+                    { uri: /\/assinatura/, method: 'post' },
                 ];
             }
-
+            
             if(!permissoes.find(x => matchExact(x.uri, path) && method.toLowerCase() === x.method)){
                 res.status(401).send({
                     status: 0,

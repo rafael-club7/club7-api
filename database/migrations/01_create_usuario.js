@@ -9,6 +9,7 @@ exports.up = async function(database, utf8 = false) {
                 table.string('nome_normalizado', 80).notNullable();
                 table.string('email', 80).notNullable();
                 table.string('senha', 80).notNullable();
+                table.string('celular', 11);
                 table.string('cpf', 11);
 
                 table.integer('tipo').notNullable();
