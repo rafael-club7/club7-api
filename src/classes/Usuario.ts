@@ -12,7 +12,8 @@ export interface IUsuario {
     data_criacao: string;
     indicado: string;
     tipo: number;
-    mudar_senha: number;
+    mudar_senha?: number;
+    confirmacao_email?: number;
     status: string|number;
 
     // Estabelecimento
@@ -44,6 +45,7 @@ class Usuario extends Classes {
         { name: 'cpf', type: 'string', required: false },
         { name: 'tipo', type: 'number', required: true },
         { name: 'mudar_senha', type: 'number', required: false },
+        { name: 'confirmacao_email', type: 'number', required: false },
         { name: 'indicado', type: 'string', required: false },
         { name: 'data_criacao', type: 'string', required: false },
 

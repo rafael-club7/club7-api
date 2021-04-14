@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import Mailer from '../System/Mailer';
 import CategoriaEstabelecimento from '../classes/CategoriaEstabelecimento';
 import Usuario, { IUsuario } from '../classes/Usuario';
 import Util from '../System/Util';
@@ -85,6 +86,24 @@ routes.post(`/usuario`, async (req, res) => {
             return res.status(400).send(resp);
         }
     }
+
+    const link = `${process.env.APP_URL}/confirmar-email?user=${payload.id}`;
+
+    const mail = new Mailer();
+    const modeloEmail = Mailer.ConfirmaCadastro(link);
+    mail.to = body.email;
+    mail.subject = modeloEmail.titulo;
+    mail.message = modeloEmail.email;
+    
+    await mail.Send().catch(e => {
+        resp.errors.push({
+            msg: "Erro ao enviar o email"
+        });
+        console.error(e);
+    });
+
+    if(resp.errors.length > 0)
+        return res.status(500).send(resp);
 
     const create = await Usuario.Create(payload);
     if (create.status !== 1) {

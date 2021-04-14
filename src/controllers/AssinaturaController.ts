@@ -50,7 +50,7 @@ routes.post(`/assinatura`, async (req, res) => {
         status: 1
     };
 
-    // TODO: Gerar Cobranca
+    // TODO: [CLUB7-86] [API][SERVICO] - Gerar Cobranca
 
     if(getFormasPagamentoName(body.tipo) === "BOLETO"){
         const endereco = {

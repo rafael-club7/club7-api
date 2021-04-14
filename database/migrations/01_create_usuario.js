@@ -38,6 +38,7 @@ exports.up = async function(database, utf8 = false) {
                 table.string('categoria', 45);
                 table.foreign('categoria').references('id').inTable('categoria_estabelecimento');
 
+                table.integer('confirmacao_email').defaultTo(0);
                 table.integer('status').defaultTo(1);
                 table.integer('deleted').defaultTo(0);
             });
