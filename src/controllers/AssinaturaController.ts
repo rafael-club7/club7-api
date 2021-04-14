@@ -4,6 +4,7 @@ import Assinatura, { IAssinatura, getFormasPagamentoName } from '../classes/Assi
 import Util from '../System/Util';
 import Usuario from '../classes/Usuario';
 import CartaoCredito, { ICartaoCredito } from '../classes/CartaoCredito';
+import Mailer from '../System/Mailer';
 
 const routes = Router();
 
@@ -52,7 +53,7 @@ routes.post(`/assinatura`, async (req, res) => {
 
     // TODO: [CLUB7-86] [API][SERVICO] - Gerar Cobranca
 
-    if(getFormasPagamentoName(body.tipo) === "BOLETO"){
+    if(getFormasPagamentoName(body.forma_pagamento) === "BOLETO"){
         const endereco = {
             rua: body.endereco.rua,
             cep: body.endereco.cep.replace(/\D/g, ''),
@@ -72,13 +73,13 @@ routes.post(`/assinatura`, async (req, res) => {
         }
     }
 
-    if(getFormasPagamentoName(body.tipo) === "CARTAO_CREDITO"){
+    if(getFormasPagamentoName(body.forma_pagamento) === "CARTAO_CREDITO"){
         const cartao : ICartaoCredito = {
             id: Util.GUID(),
             numero: body.cartao.numero.replace(/\D/g, ''),
             nome: body.cartao.nome,
-            mes: body.cartao.validade.split('/')[0],
-            ano: body.cartao.validade.split('/')[1],
+            mes: body.cartao.vencimento.split('/')[0],
+            ano: body.cartao.vencimento.split('/')[1],
             cvv: body.cartao.cvv,
             usuario: req.usuario.id,
             status: 1
@@ -106,7 +107,16 @@ routes.post(`/assinatura`, async (req, res) => {
         res.status(500).send(resp);
     }
 
+    const mail = new Mailer();
+    const modeloEmail = body.tipo_pagamento === 1 ? Mailer.ConfirmacaoAssinaturaCartao() : Mailer.ConfirmacaoAssinaturaBoleto();
+    mail.to = body.email;
+    mail.subject = modeloEmail.titulo;
+    mail.message = modeloEmail.email;
 
+    await mail.Send().catch(e => {
+        console.error(e);
+    });
+    
     resp.status = 1;
     resp.msg = 'Assinatura realizada com sucesso!';
     resp.data = payload;

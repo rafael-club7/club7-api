@@ -7,7 +7,8 @@ export const FormasPagamento = [
 ];
 
 export const getFormasPagamentoName = (forma : number) : string => {
-    return FormasPagamento.find(x => x.id === forma).name;
+    const _forma = FormasPagamento.find(x => x.id === forma);
+    return _forma.name;
 };
 
 export const getFormasPagamentoLabel = (forma : number) : string => {
@@ -48,7 +49,6 @@ class Assinatura extends Classes {
         
 
         for(const field of this.fields){
-            
             if ((typeof data[field.name] === 'undefined' || [null, ''].includes(<string>data[field.name])) && field.required) {
                 errors.push({
                     msg: `Campo '${field.name}' é obrigatório!`
@@ -61,6 +61,10 @@ class Assinatura extends Classes {
                 });
             }
         }
+
+        if(errors.length > 0)
+            return errors;
+        
 
         if(getFormasPagamentoName(data.forma_pagamento) === "CARTAO_CREDITO"){
             if(typeof data['cartao'] === 'undefined'){
