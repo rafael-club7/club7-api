@@ -146,6 +146,37 @@ routes.get(`/assinatura`, async (req, res) => {
 });
 
 // [GET] => /assinatura/:id
+routes.get('/assinatura/:id', async (req, res) => {
+    const { params } = req;
+    const resp = {
+        status: 0,
+        msg: '',
+        data: null,
+        errors: []
+    };
+
+    const assinatura = <IAssinatura> await Assinatura.GetFirst(`id = '${params.id}'`);
+    
+    if (assinatura === null) {
+        resp.errors.push({
+            msg: 'Assinatura não encontrada!'
+        });
+        return res.status(404).send(resp);
+    }
+    
+    if(req.usuario.tipo !== 9 && req.usuario.id !== assinatura.usuario){
+        resp.errors.push({
+            msg: "Você não tem permissão para visualizar esse usuário!"
+        });
+        return res.status(403).send(resp);
+    }
+    
+    resp.status = 1;
+    resp.data = assinatura;
+    res.send(resp);
+});
+
+
 // [PUT] => /assinatura/:id
 // [DELETE] => /assinatura/:id
 
