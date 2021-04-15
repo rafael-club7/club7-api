@@ -247,6 +247,45 @@ routes.put('/assinatura/:id', async (req, res) => {
 });
 
 // [DELETE] => /assinatura/:id
+routes.delete('/assinatura/:id', async (req, res) => {
+    const { params } = req;
+    const resp = {
+        status: 0,
+        msg: '',
+        data: null,
+        errors: []
+    };
+
+    const assinaturaGet = <IAssinatura> await Assinatura.GetFirst(`id = '${params.id}'`);
+
+    if (assinaturaGet === null) {
+        resp.errors.push({
+            msg: 'Usuário não encontrado!'
+        });
+        return res.status(404).send(resp);
+    }
+
+    if(req.usuario.tipo !== 9 && req.usuario.id !== assinaturaGet.usuario){
+        resp.errors.push({
+            msg: "Você não tem permissão para excluir esse usuário!"
+        });
+        return res.status(403).send(resp);
+    }
+
+    const del = await Assinatura.Delete(`id = '${params.id}'`);
+
+    if (del.status !== 1) {
+        resp.errors.push({
+            msg: 'Não foi possivel excluir'
+        });
+
+        return res.status(500).send(resp);
+    }
+
+    resp.status = 1;
+    resp.msg = 'Excluida com sucesso';
+    res.send(resp);
+});
 
 
 export default routes;
