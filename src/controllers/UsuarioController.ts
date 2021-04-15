@@ -218,10 +218,20 @@ routes.put('/usuario/:id', async (req, res) => {
     }
 
     if(body.cpf !== undefined){
-        const cpfExiste = await Usuario.GetFirst(`cpf = '${body.cpf}'`);
+        const cpfExiste = await Usuario.GetFirst(`cpf = '${body.cpf}' and id != '${params.id}'`);
         if(cpfExiste !== null){
             resp.errors.push({
                 msg: "Já existe um usuário com esse cpf!"
+            });
+            return res.status(400).send(resp);
+        }
+    }
+    
+    if(body.cnpj !== undefined){
+        const cnpjExiste = await Usuario.GetFirst(`cnpj = '${body.cnpj}' and id != '${params.id}'`);
+        if(cnpjExiste !== null){
+            resp.errors.push({
+                msg: "Já existe um usuário com esse cnpj!"
             });
             return res.status(400).send(resp);
         }
