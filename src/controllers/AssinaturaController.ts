@@ -2,7 +2,7 @@ import { Router } from 'express';
 import Plano, { IPlano } from '../Classes/Plano';
 import Assinatura, { IAssinatura, getFormasPagamentoName } from '../classes/Assinatura';
 import Util from '../System/Util';
-import Usuario from '../classes/Usuario';
+import Usuario, { IUsuario } from '../classes/Usuario';
 import CartaoCredito, { ICartaoCredito } from '../classes/CartaoCredito';
 import Mailer from '../System/Mailer';
 
@@ -107,15 +107,14 @@ routes.post(`/assinatura`, async (req, res) => {
         res.status(500).send(resp);
     }
 
-    const mail = new Mailer();
-    const modeloEmail = body.tipo_pagamento === 1 ? Mailer.ConfirmacaoAssinaturaCartao() : Mailer.ConfirmacaoAssinaturaBoleto();
-    mail.to = body.email;
-    mail.subject = modeloEmail.titulo;
-    mail.message = modeloEmail.email;
+    const mailSent = body.tipo_pagamento === 1 ? await Mailer.EnviarEmailConfirmacaoAssinaturaCartao(<IUsuario>req.usuario) : await Mailer.EnviarEmailConfirmacaoAssinaturaBoleto(<IUsuario>req.usuario);
 
-    await mail.Send().catch(e => {
-        console.error(e);
-    });
+    if(!mailSent){
+        resp.errors.push({
+            msg: "Erro ao enviar o email"
+        });
+        return res.status(500).send(resp);
+    }
     
     resp.status = 1;
     resp.msg = 'Assinatura realizada com sucesso!';

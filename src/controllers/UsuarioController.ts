@@ -89,21 +89,15 @@ routes.post(`/usuario`, async (req, res) => {
 
     const link = `${process.env.APP_URL}/confirmar-email?user=${payload.id}`;
 
-    const mail = new Mailer();
-    const modeloEmail = Mailer.ConfirmaCadastro(link);
-    mail.to = body.email;
-    mail.subject = modeloEmail.titulo;
-    mail.message = modeloEmail.email;
-    
-    await mail.Send().catch(e => {
+
+    const mailSent = await Mailer.EnviarEmailConfirmacaoCadastro(payload, link);
+
+    if(!mailSent){
         resp.errors.push({
             msg: "Erro ao enviar o email"
         });
-        console.error(e);
-    });
-
-    if(resp.errors.length > 0)
         return res.status(500).send(resp);
+    }
 
     const create = await Usuario.Create(payload);
     if (create.status !== 1) {

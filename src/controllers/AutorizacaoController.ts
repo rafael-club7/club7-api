@@ -131,7 +131,7 @@ routes.post('/nova-senha', async (req, res) => {
         return res.status(400).send(resp);
     }
 
-    const usuario = await Usuario.GetFirst(`email = '${body.email}'`);
+    const usuario = <IUsuario>await Usuario.GetFirst(`email = '${body.email}'`);
     if (usuario === null) {
         resp.errors.push({
             msg: "Email não encontrado!"
@@ -142,23 +142,14 @@ routes.post('/nova-senha', async (req, res) => {
     const key = new Date().getTime() / 1000 | 0;
     const link = `${body.link}?id=${usuario.id}&key=${key}`;
 
-    const mail = new Mailer();
-    const modeloEmail = Mailer.SolicitarNovaSenha(link);
-    mail.to = body.email;
-    mail.subject = modeloEmail.titulo;
-    mail.message = modeloEmail.email;
+    const mailSent = await Mailer.EnviarEmailSolicitarNovaSenha(usuario, link);
 
-    // TODO: Criar Logs de tudo
-
-    await mail.Send().catch(e => {
+    if(!mailSent){
         resp.errors.push({
             msg: "Erro ao enviar o email"
         });
-        console.error(e);
-    });
-    
-    if(resp.errors.length > 0)
         return res.status(500).send(resp);
+    }
     
     Usuario.Update({ mudar_senha: key }, `id = '${usuario.id}'`);
 
