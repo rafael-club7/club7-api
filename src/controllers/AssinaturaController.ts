@@ -145,6 +145,7 @@ routes.get(`/assinatura`, async (req, res) => {
     res.send(resp);
 });
 
+//TODO: [CLUB7-90] Adicionar endpoint de verificar a minha assinatura
 // [GET] => /assinatura/:id
 routes.get('/assinatura/:id', async (req, res) => {
     const { params } = req;

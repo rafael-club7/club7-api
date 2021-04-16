@@ -58,6 +58,28 @@ routes.post(`/servico`, async (req, res) => {
 });
 
 // [GET] => /servico
+routes.get(`/servico`, async (req, res) => {
+    const { query } = req;
+    const resp = {
+        status: 0,
+        msg: '',
+        data: null,
+        errors: []
+    };
+
+    const where = (query.where) ? Util.utf8Decode(unescape(String(query.where))) : '';
+    const order_by = String((query.order_by) ? query.order_by : '');
+    const limit = String((query.limit) ? query.limit : '');
+
+    const servicos = <IServico[]> await Servico.Get(where, order_by, limit);
+
+    res.set('X-TOTAL-COUNT', await Servico.Count(where));
+
+    resp.status = 1;
+    resp.data = servicos;
+    res.send(resp);
+});
+
 // [GET] => /servico/:id
 // [PUT] => /servico/:id
 // [DELETE] => /servico/:id
