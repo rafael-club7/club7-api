@@ -8,8 +8,12 @@ exports.up = async function(database, utf8 = false) {
                 table.string('nome', 45).notNullable();
                 table.string('nome_normalizado', 45).notNullable();
 
+                table.text('descricao');
+
                 table.decimal('desconto', 14, 2).notNullable();
-                table.integer('tipo').notNullable();
+                table.integer('tipo_desconto').notNullable();
+                table.integer('tipo_resgate').notNullable();
+                table.string('validade');
 
                 table.string('estabelecimento', 45).notNullable();
                 table.foreign('estabelecimento').references('id').inTable('usuario');

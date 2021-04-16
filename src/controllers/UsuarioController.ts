@@ -46,6 +46,8 @@ routes.post(`/usuario`, async (req, res) => {
             });
             return res.status(404).send(resp);
         }
+
+        // TODO: [CLUB7-89] Adicionar campos de estabelecimento
     }
 
     if (!['', null, undefined].includes(body.indicado)) {
