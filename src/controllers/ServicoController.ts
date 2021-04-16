@@ -202,8 +202,45 @@ routes.put('/servico/:id', async (req, res) => {
     res.send(resp);
 });
 
-
 // [DELETE] => /servico/:id
+routes.delete('/servico/:id', async (req, res) => {
+    const { params } = req;
+    const resp = {
+        status: 0,
+        msg: '',
+        data: null,
+        errors: []
+    };
 
+    const servicoGet = <IServico> await Servico.GetFirst(`id = '${params.id}'`);
+
+    if (servicoGet === null) {
+        resp.errors.push({
+            msg: 'Serviço não encontrado!'
+        });
+        return res.status(404).send(resp);
+    }
+
+    if(req.usuario.tipo !== 9 && req.usuario.id !== servicoGet.estabelecimento){
+        resp.errors.push({
+            msg: "Você não tem permissão para excluir esse registro!"
+        });
+        return res.status(403).send(resp);
+    }
+
+    const del = await Servico.Delete(`id = '${params.id}'`);
+
+    if (del.status !== 1) {
+        resp.errors.push({
+            msg: 'Não foi possivel excluir'
+        });
+
+        return res.status(500).send(resp);
+    }
+
+    resp.status = 1;
+    resp.msg = 'Excluido com sucesso';
+    res.send(resp);
+});
 
 export default routes;

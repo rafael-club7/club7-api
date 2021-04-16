@@ -251,14 +251,14 @@ routes.delete('/assinatura/:id', async (req, res) => {
 
     if (assinaturaGet === null) {
         resp.errors.push({
-            msg: 'Usuário não encontrado!'
+            msg: 'Assinatura não encontrada!'
         });
         return res.status(404).send(resp);
     }
 
     if(req.usuario.tipo !== 9 && req.usuario.id !== assinaturaGet.usuario){
         resp.errors.push({
-            msg: "Você não tem permissão para excluir esse usuário!"
+            msg: "Você não tem permissão para excluir esse registro!"
         });
         return res.status(403).send(resp);
     }
