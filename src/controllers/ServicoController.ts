@@ -81,6 +81,30 @@ routes.get(`/servico`, async (req, res) => {
 });
 
 // [GET] => /servico/:id
+routes.get('/servico/:id', async (req, res) => {
+    const { params } = req;
+    const resp = {
+        status: 0,
+        msg: '',
+        data: null,
+        errors: []
+    };
+
+    const servico = <IServico> await Servico.GetFirst(`id = '${params.id}'`);
+    
+    if (servico === null) {
+        resp.errors.push({
+            msg: 'Serviço não encontrada!'
+        });
+        return res.status(404).send(resp);
+    }
+
+    resp.status = 1;
+    resp.data = servico;
+    res.send(resp);
+});
+
+
 // [PUT] => /servico/:id
 // [DELETE] => /servico/:id
 
