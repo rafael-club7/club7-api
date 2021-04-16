@@ -8,6 +8,7 @@ import CategoriaEstabelecimentoController from './CategoriaEstabelecimentoContro
 import AssinaturaController from './AssinaturaController';
 import ServicoController from './ServicoController';
 import DetalheEstabelecimento from './DetalheEstabelecimento';
+import IndicacaoController from './IndicacaoController';
 
 const routes = Router();
 
@@ -19,7 +20,8 @@ const routes = Router();
     CategoriaEstabelecimentoController,
     AssinaturaController,
     ServicoController,
-    DetalheEstabelecimento
+    DetalheEstabelecimento,
+    IndicacaoController
 ].forEach((route) => {
     routes.stack = [...routes.stack, ...route.stack];
 });

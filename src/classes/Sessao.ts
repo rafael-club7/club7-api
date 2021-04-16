@@ -152,6 +152,9 @@ class Sessao extends Classes {
                 
                 // Detalhe do Estabelecimento
                 { uri: /\/detalhe-estabelecimento\/[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?/, method: 'get' },
+                
+                // Indicações
+                { uri: /\/indicacoes/, method: 'get' },
             ];
             
             // Estabelecimento

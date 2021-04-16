@@ -1,5 +1,7 @@
 import Util from '../System/Util';
 import Classes from '../System/Classes';
+import Assinatura, { IAssinatura } from './Assinatura';
+import Pagamento, { IPagamento } from './Pagamento';
 
 export interface IUsuario {
     id: string;
@@ -120,6 +122,50 @@ class Usuario extends Classes {
 
         return errors;
     }
+
+    static async hasPlanoAtivo (usuario : string) : Promise<boolean> {
+        const assinatura = <IAssinatura>(await Assinatura.GetFirst(`usuario = '${usuario}' AND status = 1`, 'data_inicio desc'));
+
+        if (assinatura === null) 
+            return false;
+
+        const hoje = new Date();
+        const dia_contratacao = new Date(assinatura.data_inicio);
+
+        assinatura.valor = parseFloat(assinatura.valor.toString()).toFixed(2);
+        assinatura.valor_centavos = Number((parseFloat(assinatura.valor).toFixed(2)).toString().replace(/\./g, ''));
+
+        const pagamentos = <IPagamento[]>(await Pagamento.Get(`assinatura = '${assinatura.id}'`, 'data DESC'));
+
+        if (hoje.getDate() >= dia_contratacao.getDate()) {
+            // Verificar o desse mês
+            const pagamentosMes = pagamentos.filter(x => new Date(x.data).getMonth() === hoje.getMonth());
+            if (pagamentosMes.find(pagamento => pagamento.status === '1')) {
+                // PAGO
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            // Verificar mês passado
+            const mesPassado = (new Date()).setMonth(hoje.getMonth() - 1);
+            const pagamentosMesPassado = pagamentos.filter(x => new Date(x.data).getMonth() === new Date(mesPassado).getMonth());
+
+            if (pagamentosMesPassado.find(pagamento => pagamento.status === '1')) {
+                // PAGO
+                return true;
+            } else {
+                // Não Pago
+                return false;
+            }
+        }
+    }
+
+    static async getIndicados(usuarioId: string) : Promise<IUsuario[]> {
+        const usuarios = <IUsuario[]> await Usuario.Get(`indicado = '${usuarioId}'`);
+        return usuarios.filter(x => this.hasPlanoAtivo(x.id));
+    }
+
 }
 
 export default Usuario;
