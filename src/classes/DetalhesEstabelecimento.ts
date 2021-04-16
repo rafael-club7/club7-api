@@ -16,7 +16,7 @@ class DetalhesEstabelecimento extends Classes {
     static table = 'detalhes_estabelecimento';
     public static fields = [
         { name: 'id', type: 'string', required: false },
-        { name: 'estabelecimento', type: 'string', required: true },
+        { name: 'estabelecimento', type: 'string', required: false },
         
         { name: 'tem_wifi', type: 'number', required: true },
         { name: 'wifi_nome', type: 'string', required: false },
@@ -28,6 +28,27 @@ class DetalhesEstabelecimento extends Classes {
         
 
     ];
+
+    static async Validate (data: {[k:string]: any}) : Promise<{ msg: string; }[]> {
+        const parentValidate = Classes.Validate.bind(DetalhesEstabelecimento);
+
+        const errors = await parentValidate(data);
+
+        if(errors.length > 0)
+            return errors;
+
+        if(data['tem_wifi'] === 1){
+            for (const field of [ 'wifi_nome', 'wifi_senha' ]) {
+                if (typeof data[field] === 'undefined' || [null, ''].includes(<string>data[field])) {
+                    errors.push({
+                        msg: `Campo '${field}' é obrigatório!`
+                    });
+                }
+            }
+        }
+
+        return errors;
+    }
 }
 
 export default DetalhesEstabelecimento;

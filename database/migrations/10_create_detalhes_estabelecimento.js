@@ -16,7 +16,7 @@ exports.up = async function(database, utf8 = false) {
                 table.integer('tem_local_carregar_celular').notNullable();
 
                 table.string('estabelecimento', 45).notNullable();
-                table.foreign('usuario').references('id').inTable('estabelecimento');
+                table.foreign('estabelecimento').references('id').inTable('usuario');
 
                 table.integer('deleted').defaultTo(0);
             });

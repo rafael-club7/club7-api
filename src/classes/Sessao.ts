@@ -149,6 +149,9 @@ class Sessao extends Classes {
                 { uri: /\/servico/, method: 'get' },
                 { uri: /\/servico\/estabelecimento\/[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?/, method: 'get' },
                 { uri: /\/servico\/[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?/, method: 'get' },
+                
+                // Detalhe do Estabelecimento
+                { uri: /\/detalhe-estabelecimento\/[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?/, method: 'get' },
             ];
             
             // Estabelecimento
@@ -165,6 +168,9 @@ class Sessao extends Classes {
                     { uri: /\/servico/, method: 'post' },
                     { uri: /\/servico\/[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?/, method: 'put' },
                     { uri: /\/servico\/[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?/, method: 'delete' },
+                    
+                    // Detalhe do Estabelecimento
+                    { uri: /\/detalhe-estabelecimento\/[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?/, method: 'put' },
                 ];
             }
             
