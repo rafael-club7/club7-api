@@ -92,4 +92,31 @@ routes.put(`/detalhe-estabelecimento/:estabelecimento`, async (req, res) => {
     res.send(resp);
 });
 
+// [GET] => /detalhe-estabelecimento/:estabelecimento
+routes.get(`/detalhe-estabelecimento/:estabelecimento`, async (req, res) => {
+    const { params } = req;
+    const resp = {
+        status: 0,
+        msg: '',
+        data: null,
+        errors: []
+    };
+    
+    const estabelecimento = <IUsuario>await Usuario.GetFirst(`id = '${params.estabelecimento}' and tipo = 2`);
+    
+    if (estabelecimento === null) {
+        resp.errors.push({
+            msg: 'Estabelecimento não encontrado!'
+        });
+        return res.status(404).send(resp);
+    }
+    
+    const detalhes = <IDetalhesEstabelecimento>await DetalhesEstabelecimento.GetFirst(`estabelecimento = '${params.estabelecimento}'`);
+
+    resp.status = 1;
+    resp.msg = 'Atualizado com sucesso';
+    resp.data = detalhes;
+    res.send(resp);
+});
+
 export default routes;
