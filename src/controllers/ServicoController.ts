@@ -139,8 +139,70 @@ routes.get('/servico/:id', async (req, res) => {
     res.send(resp);
 });
 
-
 // [PUT] => /servico/:id
+routes.put('/servico/:id', async (req, res) => {
+    const { params, body } = req;
+    const resp = {
+        status: 0,
+        msg: '',
+        data: null,
+        errors: []
+    };
+
+    const servicoGet = <IServico> await Servico.GetFirst(`id = '${params.id}'`);
+    
+    if (servicoGet === null) {
+        resp.errors.push({
+            msg: 'Serviço não encontrado!'
+        });
+        return res.status(404).send(resp);
+    }
+
+    if(req.usuario.tipo !== 9 && req.usuario.id !== servicoGet.estabelecimento){
+        resp.errors.push({
+            msg: "Você não tem permissão para editar esse serviço!"
+        });
+        return res.status(403).send(resp);
+    }
+
+    const data : { [k: string] : any} = {};
+    
+    const proibidos = ['id', 'estabelecimento', 'data_inicio'];
+    let edit = false;
+    
+    Servico.fields.forEach(campo => {
+        if (body[campo.name] !== undefined && !proibidos.includes(campo.name)) {
+            data[campo.name] = body[campo.name];
+            if (campo.name === 'nome') {
+                data.nome_normalizado = Util.toNormal(body[campo.name]);
+            }
+            edit = true;
+        }
+    });
+
+    if (!edit) {
+        resp.errors.push({
+            msg: 'Nada para editar'
+        });
+        return res.status(400).send(resp);
+    }
+
+    const update = await Servico.Update(data, `id = '${params.id}'`);
+
+    if (update.status !== 1) {
+        resp.errors.push({
+            msg: 'Não foi possivel atualizar'
+        });
+
+        return res.status(500).send(resp);
+    }
+
+    resp.status = 1;
+    resp.msg = 'Atualizado com sucesso';
+    res.send(resp);
+});
+
+
 // [DELETE] => /servico/:id
 
 
