@@ -34,7 +34,7 @@ routes.post(`/servico`, async (req, res) => {
         nome: body.nome,
         nome_normalizado: Util.toNormal(body.nome),
         descricao: body.descricao,
-        estabelecimento: req.usuario.id,
+        estabelecimento: body.estabelecimento,
         desconto: body.desconto,
         tipo_desconto: body.tipo_desconto,
         tipo_resgate: body.tipo_resgate,
@@ -80,6 +80,41 @@ routes.get(`/servico`, async (req, res) => {
     res.send(resp);
 });
 
+// [GET] => /servico/estabelecimento/:id
+routes.get('/servico/estabelecimento/:id', async (req, res) => {
+    const { params, query } = req;
+    const resp = {
+        status: 0,
+        msg: '',
+        data: null,
+        errors: []
+    };
+
+    const estabelecimento = <IUsuario> await Usuario.GetFirst(`id = '${params.id}' and tipo = 2`);
+    
+    if (estabelecimento === null) {
+        resp.errors.push({
+            msg: 'Estabelecimento não encontrado!'
+        });
+        return res.status(404).send(resp);
+    }
+
+    let where = (query.where) ? Util.utf8Decode(unescape(String(query.where))) : '';
+    const order_by = String((query.order_by) ? query.order_by : '');
+    const limit = String((query.limit) ? query.limit : '');
+
+    where = (where === '') ? `estabelecimento = '${estabelecimento.id}'` : `(${where}) AND estabelecimento = '${estabelecimento.id}'`;
+    
+
+    const servicos = <IServico[]> await Servico.Get(where, order_by, limit);
+
+    res.set('X-TOTAL-COUNT', await Servico.Count(where));
+
+    resp.status = 1;
+    resp.data = servicos;
+    res.send(resp);
+});
+
 // [GET] => /servico/:id
 routes.get('/servico/:id', async (req, res) => {
     const { params } = req;
@@ -94,7 +129,7 @@ routes.get('/servico/:id', async (req, res) => {
     
     if (servico === null) {
         resp.errors.push({
-            msg: 'Serviço não encontrada!'
+            msg: 'Serviço não encontrado!'
         });
         return res.status(404).send(resp);
     }

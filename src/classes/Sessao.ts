@@ -147,6 +147,7 @@ class Sessao extends Classes {
                 
                 // Serviço
                 { uri: /\/servico/, method: 'get' },
+                { uri: /\/servico\/estabelecimento\/[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?/, method: 'get' },
                 { uri: /\/servico\/[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?/, method: 'get' },
             ];
             
