@@ -103,6 +103,34 @@ routes.post(`/servico-resgatado`, async (req, res) => {
 });
 
 // [GET] => /servico-resgatado
+routes.get(`/servico-resgatado`, async (req, res) => {
+    const { query } = req;
+    const resp = {
+        status: 0,
+        msg: '',
+        data: null,
+        errors: []
+    };
+
+    let where = (query.where) ? Util.utf8Decode(unescape(String(query.where))) : '';
+    const order_by = String((query.order_by) ? query.order_by : '');
+    const limit = String((query.limit) ? query.limit : '');
+
+    if(req.usuario.tipo === 1)
+        where = (where !== '') ? `(${where}) AND usuario = '${req.usuario.id}'` : `usuario = '${req.usuario.id}'`;
+    
+    if(req.usuario.tipo === 2)
+        where = (where !== '') ? `(${where}) AND estabelecimento = '${req.usuario.id}'` : `estabelecimento = '${req.usuario.id}'`;
+
+    const servicos = <IServicoResgatado[]> await ServicoResgatado.Get(where, order_by, limit);
+
+    res.set('X-TOTAL-COUNT', await ServicoResgatado.Count(where));
+
+    resp.status = 1;
+    resp.data = servicos;
+    res.send(resp);
+});
+
 // [GET] => /servico-resgatado/:id
 // [PUT] => /servico-resgatado/:id
 // [DELETE] => /servico-resgatado/:id
