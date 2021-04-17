@@ -9,6 +9,7 @@ import AssinaturaController from './AssinaturaController';
 import ServicoController from './ServicoController';
 import DetalheEstabelecimento from './DetalheEstabelecimento';
 import IndicacaoController from './IndicacaoController';
+import ServicoResgatadoController from './ServicoResgatadoController';
 
 const routes = Router();
 
@@ -21,7 +22,8 @@ const routes = Router();
     AssinaturaController,
     ServicoController,
     DetalheEstabelecimento,
-    IndicacaoController
+    IndicacaoController,
+    ServicoResgatadoController,
 ].forEach((route) => {
     routes.stack = [...routes.stack, ...route.stack];
 });

@@ -155,6 +155,11 @@ class Sessao extends Classes {
                 
                 // Indicações
                 { uri: /\/indicacoes/, method: 'get' },
+                
+                // Serviço Resgatado
+                { uri: /\/servico-resgatado/, method: 'post' },
+                { uri: /\/servico-resgatado/, method: 'get' },
+                { uri: /\/servico-resgatado\/[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?/, method: 'get' },
             ];
             
             // Estabelecimento
@@ -174,6 +179,9 @@ class Sessao extends Classes {
                     
                     // Detalhe do Estabelecimento
                     { uri: /\/detalhe-estabelecimento\/[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?/, method: 'put' },
+                    
+                    // Serviço Resgatado
+                    { uri: /\/servico-resgatado\/[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?/, method: 'put' },
                 ];
             }
             

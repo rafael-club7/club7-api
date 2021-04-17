@@ -10,8 +10,13 @@ exports.up = async function(database, utf8 = false) {
                 table.string('usuario', 45).notNullable();
                 table.foreign('usuario').references('id').inTable('usuario');
 
+                table.string('codigo', 10).notNullable();
+
                 table.string('servico', 45).notNullable();
                 table.foreign('servico').references('id').inTable('servico');
+
+                table.string('estabelecimento', 45).notNullable();
+                table.foreign('estabelecimento').references('id').inTable('usuario');
 
                 table.integer('status').defaultTo(1);
                 table.integer('deleted').defaultTo(0);
