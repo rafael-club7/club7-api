@@ -132,6 +132,30 @@ routes.get(`/servico-resgatado`, async (req, res) => {
 });
 
 // [GET] => /servico-resgatado/:id
+routes.get(`/servico-resgatado/:id`, async (req, res) => {
+    const { query } = req;
+    const resp = {
+        status: 0,
+        msg: '',
+        data: null,
+        errors: []
+    };
+
+    let where = `id = '${query.id}'`;
+
+    if(req.usuario.tipo === 1)
+        where = `(${where}) AND usuario = '${req.usuario.id}'`;
+    
+    if(req.usuario.tipo === 2)
+        where = `(${where}) AND estabelecimento = '${req.usuario.id}'`;
+
+    const servicos = <IServicoResgatado> await ServicoResgatado.GetFirst(where);
+
+    resp.status = 1;
+    resp.data = servicos;
+    res.send(resp);
+});
+
 // [PUT] => /servico-resgatado/:id
 // [DELETE] => /servico-resgatado/:id
 
