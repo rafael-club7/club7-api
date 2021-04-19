@@ -133,7 +133,7 @@ routes.get(`/servico-resgatado`, async (req, res) => {
 
 // [POST] => /servico-resgatado/:codigo
 routes.post(`/servico-resgatado/:codigo`, async (req, res) => {
-    const { query } = req;
+    const { params } = req;
     const resp = {
         status: 0,
         msg: '',
@@ -141,7 +141,7 @@ routes.post(`/servico-resgatado/:codigo`, async (req, res) => {
         errors: []
     };
 
-    const servicoResgatado = <IServicoResgatado>await ServicoResgatado.GetFirst(`codigo = '${query.codigo}' AND estabelecimento = '${req.usuario.id}'`);
+    const servicoResgatado = <IServicoResgatado>await ServicoResgatado.GetFirst(`codigo = '${params.codigo}' AND estabelecimento = '${req.usuario.id}'`);
 
     if (servicoResgatado === null) {
         resp.errors.push({
@@ -157,7 +157,7 @@ routes.post(`/servico-resgatado/:codigo`, async (req, res) => {
         return res.status(403).send(resp);
     }
 
-    const update = await ServicoResgatado.Update({ status: 2 }, `codigo = '${query.codigo}' AND estabelecimento = '${req.usuario.id}'`);
+    const update = await ServicoResgatado.Update({ status: 2 }, `codigo = '${params.codigo}' AND estabelecimento = '${req.usuario.id}'`);
     if (update.status !== 1) {
         resp.errors.push({
             msg: "Erro ao registrar o resgate do Serviço!"
