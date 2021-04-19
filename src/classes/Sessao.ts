@@ -181,7 +181,7 @@ class Sessao extends Classes {
                     { uri: /\/detalhe-estabelecimento\/[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?/, method: 'put' },
                     
                     // Serviço Resgatado
-                    { uri: /\/servico-resgatado\/[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?/, method: 'post' },
+                    { uri: /\/servico-resgatado\/[0-9A-Z]+/, method: 'post' },
                     { uri: /\/servico-resgatado\/[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?/, method: 'put' },
                 ];
             }
