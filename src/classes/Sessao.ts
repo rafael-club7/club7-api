@@ -211,11 +211,11 @@ class Sessao extends Classes {
             }
             
             if(!permissoes.find(x => matchExact(x.uri, path) && method.toLowerCase() === x.method)){
-                res.status(401).send({
+                res.status(404).send({
                     status: 0,
                     errors: [
                         {
-                            msg: 'Você não tem permissão para acessar esse método!'
+                            msg: 'Método não encontrado!'
                         }
                     ]
                 });
