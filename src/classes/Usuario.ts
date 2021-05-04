@@ -9,10 +9,10 @@ export interface IUsuario {
     nome_normalizado: string;
     email: string;
     senha: string;
-    cpf: string;
-    celular: string;
+    cpf?: string;
+    celular?: string;
     data_criacao: string;
-    indicado: string;
+    indicado?: string;
     tipo: number;
     mudar_senha?: number;
     confirmacao_email?: number;
@@ -87,38 +87,36 @@ class Usuario extends Classes {
         }
 
 
-        if(data.tipo === 1){
-            if(typeof data['cpf'] === 'undefined'){
-                errors.push({
-                    msg: `O campo "CPF" é obrigatório!`
-                });
-            }else{
-                if (!Util.validaCpf(data.cpf)) {
-                    errors.push({
-                        msg: "CPF inválido!"
-                    });
-                }
-            }
-        }
+        // if(data.tipo === 1){
+        //     if(typeof data['cpf'] === 'undefined'){
+        //         errors.push({
+        //             msg: `O campo "CPF" é obrigatório!`
+        //         });
+        //     }else{
+        //         if (!Util.validaCpf(data.cpf)) {
+        //             errors.push({
+        //                 msg: "CPF inválido!"
+        //             });
+        //         }
+        //     }
+        // }
         
-        if(data.tipo === 2){
-            [ 'cnpj', 'rua', 'numero', 'bairro', 'cidade', 'estado', 'cep', 'categoria' ].forEach(campo =>{
+        // if(data.tipo === 2){
+        //     [ 'cnpj', 'rua', 'numero', 'bairro', 'cidade', 'estado', 'cep', 'categoria' ].forEach(campo =>{
     
-                if(typeof data[campo] === 'undefined' || [null, ''].includes(<string>data[campo])){
-                    errors.push({
-                        msg: `O campo "${campo}" é obrigatório!`
-                    });
-                }else if(campo === "cnpj"){
-                    if (!Util.validarCNPJ(data.cnpj)) {
-                        errors.push({
-                            msg: "CNPJ inválido!"
-                        });
-                    }
-                }
-            });
-        }
-
-
+        //         if(typeof data[campo] === 'undefined' || [null, ''].includes(<string>data[campo])){
+        //             errors.push({
+        //                 msg: `O campo "${campo}" é obrigatório!`
+        //             });
+        //         }else if(campo === "cnpj"){
+        //             if (!Util.validarCNPJ(data.cnpj)) {
+        //                 errors.push({
+        //                     msg: "CNPJ inválido!"
+        //                 });
+        //             }
+        //         }
+        //     });
+        // }
 
         return errors;
     }

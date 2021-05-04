@@ -80,7 +80,7 @@ class Mailer{
         mail.message += `<html>`;
         mail.message += `   <body style="width:600px; margin:0; padding:0;font-family:Circular, Helvetica, Arial, sans-serif; position: absolute; top: 0; bottom: 0; left: 0; right: 0; margin: auto;">`;
         mail.message += `       <div style="width:100%; height:80px; background-color:#3C8DBC; line-height: 80px; text-align: center;">`;
-        mail.message += `           <span style="color:white;font-size:30px"> <b>Lead</b>This </span>`;
+        mail.message += `           <span style="color:white;font-size:30px"> <b>Club7</b> </span>`;
         mail.message += `       </div>`;
         mail.message += `       <div style="width:100%; height: 300px;">`;
         mail.message += `           <div style="width: 80%; height: 200px; background-color:white; text-align: center; padding: 25px 10%">`;
@@ -88,7 +88,7 @@ class Mailer{
         mail.message += `               <p style="font-size: 25px;"> Para continuar seu cadastro, <a href="${link}">Clique aqui</a> para receber todos os nossos benefícios! </p>`;
         mail.message += `           </div>`;
         mail.message += `           <div style="max-width:100%; min-height: 30px; background-color: #F7F7F7; padding: 5px 0 5px 20px">`;
-        mail.message += `               <p style="color: #88898C; font-size: 20px;"><b>Lead</b>This</p>`;
+        mail.message += `               <p style="color: #88898C; font-size: 20px;"><b>Club7</b></p>`;
         mail.message += `               <p><small style="color: #ddd;">by LeadThis - 2020</small></p>`;
         mail.message += `           </div>`;
         mail.message += `       </div>`;
@@ -115,7 +115,7 @@ class Mailer{
         mail.message += `<html>`;
         mail.message += `   <body style="width:600px; margin:0; padding:0;font-family:Circular, Helvetica, Arial, sans-serif; position: absolute; top: 0; bottom: 0; left: 0; right: 0; margin: auto;">`;
         mail.message += `       <div style="width:100%; height:80px; background-color:#3C8DBC; line-height: 80px; text-align: center;">`;
-        mail.message += `           <span style="color:white;font-size:30px"> <b>Lead</b>This </span>`;
+        mail.message += `           <span style="color:white;font-size:30px"> <b>Club7</b> </span>`;
         mail.message += `       </div>`;
         mail.message += `       <div style="width:100%; height: 300px;">`;
         mail.message += `           <div style="width: 80%; height: 200px; background-color:white; text-align: center; padding: 25px 10%">`;
@@ -123,7 +123,7 @@ class Mailer{
         mail.message += `               <p style="font-size: 25px;"> Aqui vai o link onde você pode definir uma nova senha: <a href="${link}">Clique aqui</a> </p>`;
         mail.message += `           </div>`;
         mail.message += `           <div style="max-width:100%; min-height: 30px; background-color: #F7F7F7; padding: 5px 0 5px 20px">`;
-        mail.message += `               <p style="color: #88898C; font-size: 20px;"><b>Lead</b>This</p>`;
+        mail.message += `               <p style="color: #88898C; font-size: 20px;"><b>Club7</b></p>`;
         mail.message += `               <p><small style="color: #ddd;">by LeadThis - 2020</small></p>`;
         mail.message += `           </div>`;
         mail.message += `       </div>`;
@@ -150,7 +150,7 @@ class Mailer{
         mail.message += `<html>`;
         mail.message += `   <body style="width:600px; margin:0; padding:0;font-family:Circular, Helvetica, Arial, sans-serif; position: absolute; top: 0; bottom: 0; left: 0; right: 0; margin: auto;">`;
         mail.message += `       <div style="width:100%; height:80px; background-color:#3C8DBC; line-height: 80px; text-align: center;">`;
-        mail.message += `           <span style="color:white;font-size:30px"> <b>Lead</b>This </span>`;
+        mail.message += `           <span style="color:white;font-size:30px"> <b>Club7</b> </span>`;
         mail.message += `       </div>`;
         mail.message += `       <div style="width:100%; height: 300px;">`;
         mail.message += `           <div style="width: 80%; height: 200px; background-color:white; text-align: center; padding: 25px 10%">`;
@@ -158,7 +158,7 @@ class Mailer{
         mail.message += `               <p style="font-size: 25px;"> Obrigado </p>`;
         mail.message += `           </div>`;
         mail.message += `           <div style="max-width:100%; min-height: 30px; background-color: #F7F7F7; padding: 5px 0 5px 20px">`;
-        mail.message += `               <p style="color: #88898C; font-size: 20px;"><b>Lead</b>This</p>`;
+        mail.message += `               <p style="color: #88898C; font-size: 20px;"><b>Club7</b></p>`;
         mail.message += `               <p><small style="color: #ddd;">by LeadThis - 2020</small></p>`;
         mail.message += `           </div>`;
         mail.message += `       </div>`;
@@ -186,7 +186,7 @@ class Mailer{
         mail.message += `<html>`;
         mail.message += `   <body style="width:600px; margin:0; padding:0;font-family:Circular, Helvetica, Arial, sans-serif; position: absolute; top: 0; bottom: 0; left: 0; right: 0; margin: auto;">`;
         mail.message += `       <div style="width:100%; height:80px; background-color:#3C8DBC; line-height: 80px; text-align: center;">`;
-        mail.message += `           <span style="color:white;font-size:30px"> <b>Lead</b>This </span>`;
+        mail.message += `           <span style="color:white;font-size:30px"> <b>Club7</b> </span>`;
         mail.message += `       </div>`;
         mail.message += `       <div style="width:100%; height: 300px;">`;
         mail.message += `           <div style="width: 80%; height: 200px; background-color:white; text-align: center; padding: 25px 10%">`;
@@ -194,7 +194,7 @@ class Mailer{
         mail.message += `               <p style="font-size: 25px;"> Obrigado </p>`;
         mail.message += `           </div>`;
         mail.message += `           <div style="max-width:100%; min-height: 30px; background-color: #F7F7F7; padding: 5px 0 5px 20px">`;
-        mail.message += `               <p style="color: #88898C; font-size: 20px;"><b>Lead</b>This</p>`;
+        mail.message += `               <p style="color: #88898C; font-size: 20px;"><b>Club7</b></p>`;
         mail.message += `               <p><small style="color: #ddd;">by LeadThis - 2020</small></p>`;
         mail.message += `           </div>`;
         mail.message += `       </div>`;
@@ -202,6 +202,77 @@ class Mailer{
         mail.message += `</html>`;
         return mail;
     }
+
+    static async EnviarEmailCadastroUsuario(usuario: IUsuario, link: string) {
+        const mail = new Mailer();
+        mail.to = usuario.email;
+        mail.subject = "Club7 - Bem vindo!";
+        
+        mail.message = '';
+        mail.message += `<html>`;
+        mail.message += `   <body style="width:600px; margin:0; padding:0;font-family:Circular, Helvetica, Arial, sans-serif; position: absolute; top: 0; bottom: 0; left: 0; right: 0; margin: auto;">`;
+        mail.message += `       <div style="width:100%; height:80px; background-color:#3C8DBC; line-height: 80px; text-align: center;">`;
+        mail.message += `           <span style="color:white;font-size:30px"> <b>Club7</b> </span>`;
+        mail.message += `       </div>`;
+        mail.message += `       <div style="width:100%; height: 300px;">`;
+        mail.message += `           <div style="width: 80%; height: 200px; background-color:white; text-align: center; padding: 25px 10%">`;
+        mail.message += `               <h2 style="border:none;margin:0px;padding:0px;text-decoration:none;color:rgb(0, 0, 0);font-size:40px;font-weight:bold;line-height:45px;letter-spacing:-0.04em;text-align:center;">Muito bem vindo ao Club7!</h2>`;
+        mail.message += `               <p style="font-size: 25px;"> Para continuar seu cadastro, <a href="${link}">Clique aqui</a>! </p>`;
+        mail.message += `           </div>`;
+        mail.message += `           <div style="max-width:100%; min-height: 30px; background-color: #F7F7F7; padding: 5px 0 5px 20px">`;
+        mail.message += `               <p style="color: #88898C; font-size: 20px;"><b>Club7</b></p>`;
+        mail.message += `               <p><small style="color: #ddd;">by LeadThis - 2020</small></p>`;
+        mail.message += `           </div>`;
+        mail.message += `       </div>`;
+        mail.message += `   </body>`;
+        mail.message += `</html>`;
+
+        let error = false;
+
+        // TODO: Adicionar LOG
+        await mail.Send().catch(e => {
+            error = true;
+            console.error(e);
+        });
+
+        return !error;
+    }
+
+    static async EnviarEmailCadastroParceiro(usuario: IUsuario, link: string) {
+        const mail = new Mailer();
+        mail.to = usuario.email;
+        mail.subject = "Club7 - Bem vindo!";
+        
+        mail.message = '';
+        mail.message += `<html>`;
+        mail.message += `   <body style="width:600px; margin:0; padding:0;font-family:Circular, Helvetica, Arial, sans-serif; position: absolute; top: 0; bottom: 0; left: 0; right: 0; margin: auto;">`;
+        mail.message += `       <div style="width:100%; height:80px; background-color:#3C8DBC; line-height: 80px; text-align: center;">`;
+        mail.message += `           <span style="color:white;font-size:30px"> <b>Club7</b> </span>`;
+        mail.message += `       </div>`;
+        mail.message += `       <div style="width:100%; height: 300px;">`;
+        mail.message += `           <div style="width: 80%; height: 200px; background-color:white; text-align: center; padding: 25px 10%">`;
+        mail.message += `               <h2 style="border:none;margin:0px;padding:0px;text-decoration:none;color:rgb(0, 0, 0);font-size:40px;font-weight:bold;line-height:45px;letter-spacing:-0.04em;text-align:center;">Muito bem vindo ao Club7!</h2>`;
+        mail.message += `               <p style="font-size: 25px;"> Para continuar seu cadastro, <a href="${link}">Clique aqui</a>! </p>`;
+        mail.message += `           </div>`;
+        mail.message += `           <div style="max-width:100%; min-height: 30px; background-color: #F7F7F7; padding: 5px 0 5px 20px">`;
+        mail.message += `               <p style="color: #88898C; font-size: 20px;"><b>Club7</b></p>`;
+        mail.message += `               <p><small style="color: #ddd;">by LeadThis - 2020</small></p>`;
+        mail.message += `           </div>`;
+        mail.message += `       </div>`;
+        mail.message += `   </body>`;
+        mail.message += `</html>`;
+
+        let error = false;
+
+        // TODO: Adicionar LOG
+        await mail.Send().catch(e => {
+            error = true;
+            console.error(e);
+        });
+
+        return !error;
+    }
+
 
 }
 
