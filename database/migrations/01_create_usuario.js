@@ -21,19 +21,19 @@ exports.up = async function(database, utf8 = false) {
 
 
                 // INFO de Estabelecimento
-                table.integer('cnpj', 14);
-                table.string('imagem', 50);
+                // table.integer('cnpj', 14);
+                // table.string('imagem', 50);
 
-                table.string('rua', 40);
-                table.string('numero', 10);
-                table.string('bairro', 30);
-                table.string('cidade', 30);
-                table.string('estado', 30);
-                table.string('cep', 10);
-                table.string('complemento', 50);
+                // table.string('rua', 40);
+                // table.string('numero', 10);
+                // table.string('bairro', 30);
+                // table.string('cidade', 30);
+                // table.string('estado', 30);
+                // table.string('cep', 10);
+                // table.string('complemento', 50);
 
-                table.string('latitude', 20);
-                table.string('longitude', 20);
+                // table.string('latitude', 20);
+                // table.string('longitude', 20);
 
                 table.string('categoria', 45);
                 table.foreign('categoria').references('id').inTable('categoria_estabelecimento');

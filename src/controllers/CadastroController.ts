@@ -1,14 +1,12 @@
 import { Router } from 'express';
 import Mailer from '../System/Mailer';
-import CategoriaEstabelecimento from '../classes/CategoriaEstabelecimento';
 import Usuario, { IUsuario } from '../classes/Usuario';
 import Util from '../System/Util';
-import app from 'src/app';
 
 const routes = Router();
 
 
-app.post(`/cadastro`, async (req, res) => {
+routes.post(`/cadastro-basico`, async (req, res) => {
     const { body } = req;
 
     const resp = {
@@ -29,9 +27,12 @@ app.post(`/cadastro`, async (req, res) => {
         nome_normalizado: Util.toNormal(body.nome),
         email: body.email,
         senha: body.senha,
+        cpf: body.cpf,
+        cnpj: body.cnpj,
+        categoria: body.categoria,
         data_criacao: new Date().toJSON(),
         tipo: body.tipo,
-        status: 1
+        status: 0
     };
 
     payload.senha = Util.Encrypt(body.senha, payload.id);
@@ -62,7 +63,6 @@ app.post(`/cadastro`, async (req, res) => {
 
     const link = `${process.env.APP_URL}/confirmar-email?user=${payload.id}`;
 
-
     const mailSent = (payload.tipo === 1) ?
         await Mailer.EnviarEmailCadastroUsuario(payload, link) :
         await Mailer.EnviarEmailCadastroParceiro(payload, link);
@@ -87,8 +87,8 @@ app.post(`/cadastro`, async (req, res) => {
     resp.data = payload;
     res.send(resp);
 
-
 });
+
 
 
 export default routes;

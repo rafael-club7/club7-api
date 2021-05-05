@@ -63,6 +63,7 @@ class Sessao extends Classes {
         }
 
         const open = [
+            { uri: /\/cadastro/, method: 'post' },
             { uri: /\/usuario/, method: 'post' },
             { uri: /\/estabelecimento/, method: 'post' },
             { uri: /\/login/, method: 'post' },
@@ -152,7 +153,7 @@ class Sessao extends Classes {
                 { uri: /\/servico\/[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?/, method: 'get' },
                 
                 // Detalhe do Estabelecimento
-                { uri: /\/detalhe-estabelecimento\/[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?/, method: 'get' },
+                { uri: /\/estabelecimento\/[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?/, method: 'get' },
                 
                 // Indicações
                 { uri: /\/indicacoes/, method: 'get' },
@@ -178,8 +179,6 @@ class Sessao extends Classes {
                     { uri: /\/servico\/[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?/, method: 'put' },
                     { uri: /\/servico\/[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?/, method: 'delete' },
                     
-                    // Detalhe do Estabelecimento
-                    { uri: /\/detalhe-estabelecimento\/[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?/, method: 'put' },
                     
                     // Serviço Resgatado
                     { uri: /\/servico-resgatado\/[0-9A-Z]+/, method: 'post' },

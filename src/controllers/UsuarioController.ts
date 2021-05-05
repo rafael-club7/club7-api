@@ -34,10 +34,10 @@ routes.post(`/usuario`, async (req, res) => {
     payload.senha = Util.Encrypt(body.senha, payload.id);
 
     if(payload.tipo === 2){
-        const CepCoords = require("coordenadas-do-cep");
-        const coordenadas = await CepCoords.getByEndereco(`${payload.estado}, ${payload.rua} ${payload.numero}`);
-        payload.latitude = coordenadas.lat;
-        payload.longitude = coordenadas.lon;
+        // const CepCoords = require("coordenadas-do-cep");
+        // const coordenadas = await CepCoords.getByEndereco(`${payload.estado}, ${payload.rua} ${payload.numero}`);
+        // payload.latitude = coordenadas.lat;
+        // payload.longitude = coordenadas.lon;
 
         const categoriaExiste = await CategoriaEstabelecimento.GetFirst(`id = '${payload.categoria}'`);
         if(categoriaExiste === null){

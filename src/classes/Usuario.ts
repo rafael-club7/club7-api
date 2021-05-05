@@ -2,6 +2,7 @@ import Util from '../System/Util';
 import Classes from '../System/Classes';
 import Assinatura, { IAssinatura } from './Assinatura';
 import Pagamento, { IPagamento } from './Pagamento';
+import CategoriaEstabelecimento from './CategoriaEstabelecimento';
 
 export interface IUsuario {
     id: string;
@@ -16,21 +17,12 @@ export interface IUsuario {
     tipo: number;
     mudar_senha?: number;
     confirmacao_email?: number;
-    status: string|number;
+    status: string | number;
 
     // Estabelecimento
 
     cnpj?: string;
     imagem?: string;
-    rua?: string;
-    numero?: string;
-    bairro?: string;
-    cidade?: string;
-    estado?: string;
-    cep?: string;
-    complemento?: string;
-    latitude?: string;
-    longitude?: string;
     categoria?: string;
 }
 
@@ -54,30 +46,21 @@ class Usuario extends Classes {
         // info  de estabelecimento
         { name: 'cnpj', type: 'string', required: false },
         { name: 'imagem', type: 'string', required: false },
-        { name: 'rua', type: 'string', required: false },
-        { name: 'numero', type: 'string', required: false },
-        { name: 'bairro', type: 'string', required: false },
-        { name: 'cidade', type: 'string', required: false },
-        { name: 'estado', type: 'string', required: false },
-        { name: 'cep', type: 'string', required: false },
-        { name: 'complemento', type: 'string', required: false },
-        { name: 'latitude', type: 'string', required: false },
-        { name: 'longitude', type: 'string', required: false },
+        
         { name: 'categoria', type: 'string', required: false },
         { name: 'status', type: 'number', required: false }
     ];
 
-    static async Validate (data: {[k:string]: any}) : Promise<{ msg: string; }[]> {
+    static async Validate (data: { [k: string]: any }): Promise<{ msg: string; }[]> {
         const errors = [];
-        
 
-        for(const field of this.fields){
-            
+        for (const field of this.fields) {
+
             if ((typeof data[field.name] === 'undefined' || [null, ''].includes(<string>data[field.name])) && field.required) {
                 errors.push({
                     msg: `Campo '${field.name}' é obrigatório!`
                 });
-            } 
+            }
 
             if (!(typeof data[field.name] === 'undefined' || [null, ''].includes(<string>data[field.name])) && typeof data[field.name] !== field.type) {
                 errors.push({
@@ -86,45 +69,52 @@ class Usuario extends Classes {
             }
         }
 
+        if (data.tipo === 1) {
+            if (typeof data['cpf'] === 'undefined') {
+                errors.push({
+                    msg: `O campo "CPF" é obrigatório!`
+                });
+            } else {
+                if (!Util.validaCpf(data.cpf)) {
+                    errors.push({
+                        msg: "CPF inválido!"
+                    });
+                }
+            }
+        }
 
-        // if(data.tipo === 1){
-        //     if(typeof data['cpf'] === 'undefined'){
-        //         errors.push({
-        //             msg: `O campo "CPF" é obrigatório!`
-        //         });
-        //     }else{
-        //         if (!Util.validaCpf(data.cpf)) {
-        //             errors.push({
-        //                 msg: "CPF inválido!"
-        //             });
-        //         }
-        //     }
-        // }
-        
-        // if(data.tipo === 2){
-        //     [ 'cnpj', 'rua', 'numero', 'bairro', 'cidade', 'estado', 'cep', 'categoria' ].forEach(campo =>{
-    
-        //         if(typeof data[campo] === 'undefined' || [null, ''].includes(<string>data[campo])){
-        //             errors.push({
-        //                 msg: `O campo "${campo}" é obrigatório!`
-        //             });
-        //         }else if(campo === "cnpj"){
-        //             if (!Util.validarCNPJ(data.cnpj)) {
-        //                 errors.push({
-        //                     msg: "CNPJ inválido!"
-        //                 });
-        //             }
-        //         }
-        //     });
-        // }
+        if (data.tipo === 2) {
+            if (typeof data['cnpj'] === 'undefined') {
+                errors.push({
+                    msg: `O campo "cnpj" é obrigatório!`
+                });
+            }else if (!Util.validarCNPJ(data.cnpj)) {
+                errors.push({
+                    msg: "CNPJ inválido!"
+                });
+            }
+
+            if (typeof data['categoria'] === 'undefined') {
+                errors.push({
+                    msg: `O campo "Categoria" é obrigatório!`
+                });
+            }else{
+                const categoriaExiste = await CategoriaEstabelecimento.GetFirst(`id = '${data.categoria}'`);
+                if(categoriaExiste === null){
+                    errors.push({
+                        msg: "Categoria não encontrada!"
+                    });
+                }
+            }
+        }
 
         return errors;
     }
 
-    static async hasPlanoAtivo (usuario : string) : Promise<boolean> {
+    static async hasPlanoAtivo (usuario: string): Promise<boolean> {
         const assinatura = <IAssinatura>(await Assinatura.GetFirst(`usuario = '${usuario}' AND status = 1`, 'data_inicio desc'));
 
-        if (assinatura === null) 
+        if (assinatura === null)
             return false;
 
         const hoje = new Date();
@@ -159,8 +149,8 @@ class Usuario extends Classes {
         }
     }
 
-    static async getIndicados(usuarioId: string) : Promise<IUsuario[]> {
-        const usuarios = <IUsuario[]> await Usuario.Get(`indicado = '${usuarioId}'`);
+    static async getIndicados (usuarioId: string): Promise<IUsuario[]> {
+        const usuarios = <IUsuario[]>await Usuario.Get(`indicado = '${usuarioId}'`);
         return usuarios.filter(x => this.hasPlanoAtivo(x.id));
     }
 

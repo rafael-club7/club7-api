@@ -40,6 +40,13 @@ routes.post('/login', async (req, res) => {
         return res.status(404).send(resp);
     }
 
+    if(usuario.status === 0){
+        resp.errors.push({
+            msg: "Esse usuário ainda não está ativo!"
+        });
+        return res.status(403).send(resp);
+    }
+
     if (Util.Decrypt(usuario.senha, usuario.id) !== body.senha) {
         resp.errors.push({
             msg: 'Senha incorreta'
