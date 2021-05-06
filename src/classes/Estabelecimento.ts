@@ -4,6 +4,7 @@ export interface IEstabelecimento
 {
     id: string;
     parceiro: string;
+    nome?: string;
     tem_wifi: number;
     wifi_nome: string;
     wifi_senha: string;

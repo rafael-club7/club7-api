@@ -7,7 +7,7 @@ const routes = Router();
 
 // [POST] => /estabelecimento
 routes.post(`/estabelecimento`, async (req, res) => {
-    const { params, body } = req;
+    const { body } = req;
     const resp = {
         status: 0,
         msg: '',
@@ -104,4 +104,31 @@ routes.get(`/estabelecimento/:id`, async (req, res) => {
     res.send(resp);
 });
 
+// [GET] => /estabelecimento
+routes.get('/estabelecimento', async (req, res) => {
+    const { query } = req;
+    const resp = {
+        status: 0,
+        msg: '',
+        data: null,
+        errors: []
+    };
+
+    const where = (query.where) ? Util.utf8Decode(unescape(String(query.where))) : '';
+    const order_by = String((query.order_by) ? query.order_by : '');
+    const limit = String((query.limit) ? query.limit : '');
+
+    const estabelecimentos = <IEstabelecimento[]> await Estabelecimento.Get(where, order_by, limit);
+
+    for (const i in estabelecimentos) {
+        const parceiro = <IUsuario> await Usuario.GetFirst(`id = '${estabelecimentos[i].parceiro}'`);
+        estabelecimentos[i].nome = parceiro.nome;
+    }
+
+    res.set('X-TOTAL-COUNT', await Estabelecimento.Count(where));
+
+    resp.status = 1;
+    resp.data = estabelecimentos;
+    res.send(resp);
+});
 export default routes;
