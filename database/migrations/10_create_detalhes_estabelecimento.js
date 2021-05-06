@@ -15,6 +15,17 @@ exports.up = async function(database, utf8 = false) {
                 table.integer('tem_local_descanso').notNullable();
                 table.integer('tem_local_carregar_celular').notNullable();
 
+                table.string('rua', 40);
+                table.string('numero', 10);
+                table.string('bairro', 30);
+                table.string('cidade', 30);
+                table.string('estado', 30);
+                table.string('cep', 10);
+                table.string('complemento', 50);
+
+                table.string('latitude', 20);
+                table.string('longitude', 20);
+
                 table.string('parceiro', 45).notNullable();
                 table.foreign('parceiro').references('id').inTable('usuario');
 

@@ -1,6 +1,5 @@
 import { Router } from 'express';
 import Mailer from '../System/Mailer';
-import CategoriaEstabelecimento from '../classes/CategoriaEstabelecimento';
 import Usuario, { IUsuario } from '../classes/Usuario';
 import Util from '../System/Util';
 

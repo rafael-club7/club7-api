@@ -22,7 +22,7 @@ exports.up = async function(database, utf8 = false) {
 
                 // INFO de Estabelecimento
                 table.integer('cnpj', 14);
-                // table.string('imagem', 50);
+                table.string('imagem', 50);
 
                 // table.string('rua', 40);
                 // table.string('numero', 10);

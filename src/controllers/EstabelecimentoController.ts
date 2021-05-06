@@ -5,8 +5,8 @@ import Util from '../System/Util';
 
 const routes = Router();
 
-// [POST] => /estabelecimento/:parceiro
-routes.post(`/estabelecimento/:parceiro`, async (req, res) => {
+// [POST] => /estabelecimento
+routes.post(`/estabelecimento`, async (req, res) => {
     const { params, body } = req;
     const resp = {
         status: 0,
@@ -15,7 +15,12 @@ routes.post(`/estabelecimento/:parceiro`, async (req, res) => {
         errors: []
     };
     
-    const parceiro = <IUsuario>await Usuario.GetFirst(`id = '${params.parceiro}' and tipo = 2`);
+    resp.errors = await Estabelecimento.Validate(body);
+
+    if (resp.errors.length > 0)
+        return res.status(400).send(resp);
+
+    const parceiro = <IUsuario>await Usuario.GetFirst(`id = '${req.usuario.id}' and tipo = 2`);
     
     if (parceiro === null) {
         resp.errors.push({
@@ -23,18 +28,6 @@ routes.post(`/estabelecimento/:parceiro`, async (req, res) => {
         });
         return res.status(404).send(resp);
     }
-    
-    if(req.usuario.tipo !== 9 && req.usuario.id !== params.parceiro){
-        resp.errors.push({
-            msg: "Você não tem permissão para editar esse parceiro!"
-        });
-        return res.status(403).send(resp);
-    }
-
-    resp.errors = await Estabelecimento.Validate(body);
-
-    if (resp.errors.length > 0)
-        return res.status(400).send(resp);
 
     const CepCoords = require("coordenadas-do-cep");
     const coordenadas = await CepCoords.getByEndereco(`${body.estado}, ${body.rua} ${body.numero}`);
@@ -49,7 +42,7 @@ routes.post(`/estabelecimento/:parceiro`, async (req, res) => {
         
     const payload: IEstabelecimento = {
         id: Util.GUID(),
-        parceiro: params.parceiro,
+        parceiro: req.usuario.id,
         tem_banheiro: body.tem_banheiro,
         tem_local_carregar_celular: body.tem_local_carregar_celular,
         tem_local_descanso: body.tem_local_descanso,
