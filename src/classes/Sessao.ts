@@ -63,7 +63,6 @@ class Sessao extends Classes {
         }
 
         const open = [
-            { uri: /\/cadastro/, method: 'post' },
             { uri: /\/usuario/, method: 'post' },
             { uri: /\/estabelecimento/, method: 'post' },
             { uri: /\/login/, method: 'post' },

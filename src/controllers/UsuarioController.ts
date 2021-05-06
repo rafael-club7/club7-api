@@ -21,34 +21,22 @@ routes.post(`/usuario`, async (req, res) => {
 
     if (resp.errors.length > 0)
         return res.status(400).send(resp);
-        
-    const payload : IUsuario = {
+
+    const payload: IUsuario = {
         id: Util.GUID(),
-        ...body,
+        nome: body.nome,
         nome_normalizado: Util.toNormal(body.nome),
+        email: body.email,
+        senha: body.senha,
+        cpf: body.cpf,
+        cnpj: body.cnpj,
+        categoria: body.categoria,
         data_criacao: new Date().toJSON(),
-        cpf: body.tipo === 1 ? body.cpf.toString().replace(/\D/g, '') : null,
-        cnpj: body.tipo === 2 ? body.cnpj.toString().replace(/\D/g, '') : null,
+        tipo: body.tipo,
+        status: 0
     };
 
     payload.senha = Util.Encrypt(body.senha, payload.id);
-
-    if(payload.tipo === 2){
-        // const CepCoords = require("coordenadas-do-cep");
-        // const coordenadas = await CepCoords.getByEndereco(`${payload.estado}, ${payload.rua} ${payload.numero}`);
-        // payload.latitude = coordenadas.lat;
-        // payload.longitude = coordenadas.lon;
-
-        const categoriaExiste = await CategoriaEstabelecimento.GetFirst(`id = '${payload.categoria}'`);
-        if(categoriaExiste === null){
-            resp.errors.push({
-                msg: "Categoria não encontrada!"
-            });
-            return res.status(404).send(resp);
-        }
-
-        // TODO: [CLUB7-89] Adicionar campos de estabelecimento
-    }
 
     if (!['', null, undefined].includes(body.indicado)) {
         const indicacaoExiste = await Usuario.GetFirst(`id = '${body.indicado}'`);
@@ -58,6 +46,7 @@ routes.post(`/usuario`, async (req, res) => {
             });
             return res.status(404).send(resp);
         }
+        payload.indicado = body.indicado;
     }
 
     const usuarioExiste = await Usuario.GetFirst(`email = '${payload.email}' ${payload.tipo === 1 ? `OR cpf = '${payload.cpf}'`: ''} ${payload.tipo === 2 ? `OR cnpj = '${payload.cnpj}'`: ''}`);
@@ -91,10 +80,11 @@ routes.post(`/usuario`, async (req, res) => {
 
     const link = `${process.env.APP_URL}/confirmar-email?user=${payload.id}`;
 
+    const mailSent = (payload.tipo === 1) ?
+        await Mailer.EnviarEmailCadastroUsuario(payload, link) :
+        await Mailer.EnviarEmailCadastroParceiro(payload, link);
 
-    const mailSent = await Mailer.EnviarEmailConfirmacaoCadastro(payload, link);
-
-    if(!mailSent){
+    if (!mailSent) {
         resp.errors.push({
             msg: "Erro ao enviar o email"
         });
@@ -113,6 +103,7 @@ routes.post(`/usuario`, async (req, res) => {
     resp.msg = 'Usuário criado com sucesso!';
     resp.data = payload;
     res.send(resp);
+
 });
 
 // [GET] => /usuario

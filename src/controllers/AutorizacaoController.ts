@@ -8,13 +8,22 @@ const routes = Router();
 
 // [POST] => /login
 routes.post('/login', async (req, res) => {
-    const { body } = req;
+    const { body, headers } = req;
     const resp = {
         status: 0,
         msg: '',
         data: null,
         errors: []
     };
+
+    if(headers['application'] === undefined){
+        return res.status(403).send({
+            status: 0,
+            errors: [
+                { msg: 'O header "application" é obrigatório para esse endpoint!' }
+            ]
+        });
+    }
 
     const obrigatorios = ['email', 'senha'];
 
@@ -47,6 +56,18 @@ routes.post('/login', async (req, res) => {
         return res.status(403).send(resp);
     }
 
+
+    const permissao = (usuario.tipo !== 9) 
+        ? (usuario.tipo === 1 && headers['application'] === "APP_MOBILE") || (usuario.tipo === 2 && headers['application'] === "APP_WEB") 
+        : true;
+
+    if(!permissao){
+        resp.errors.push({
+            msg: "Você não tem permissão para acessar essa aplicação!"
+        });
+        return res.status(401).send(resp);
+    }
+    
     if (Util.Decrypt(usuario.senha, usuario.id) !== body.senha) {
         resp.errors.push({
             msg: 'Senha incorreta'
@@ -261,7 +282,7 @@ routes.post(`/confirmar-email`, async (req, res) => {
         return res.status(400).send(resp);
     }
 
-    Usuario.Update({ confirmacao_email: new Date().getTime() / 1000 | 0 }, `id = '${usuario.id}'`);
+    Usuario.Update({ confirmacao_email: new Date().getTime() / 1000 | 0, status: 1 }, `id = '${usuario.id}'`);
 
     const sessao = {
         id: Util.GUID(),
