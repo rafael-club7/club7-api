@@ -30,7 +30,7 @@ routes.post(`/estabelecimento`, async (req, res) => {
     }
 
     const CepCoords = require("coordenadas-do-cep");
-    const coordenadas = await CepCoords.getByEndereco(`${body.estado}, ${body.rua} ${body.numero}`);
+    const coordenadas = await CepCoords.getByEndereco(`${body.estado}, ${body.rua} ${body.numero}, ${body.cep}`);
 
     const estabelecimentoExiste = <IEstabelecimento>await Estabelecimento.GetFirst(`latitude = '${coordenadas.lat}' AND longitude = '${coordenadas.lon}'`);
     if (estabelecimentoExiste !== null) {
@@ -131,4 +131,73 @@ routes.get('/estabelecimento', async (req, res) => {
     resp.data = estabelecimentos;
     res.send(resp);
 });
+
+// [PUT] => /estabelecimento/:id
+routes.put(`/estabelecimento/:id`, async (req, res) => {
+    const { body, params } = req;
+    const resp = {
+        status: 0,
+        msg: '',
+        data: null,
+        errors: []
+    };
+    
+    const estabelecimento = <IEstabelecimento>await Estabelecimento.GetFirst(`id = '${params.id}'`);
+    if (estabelecimento === null) {
+        resp.errors.push({
+            msg: "Estabelecimento não encontrado"
+        });
+        return res.status(400).send(resp);
+    }
+
+    const payload : {[k: string] : any} = {};
+
+    const data : { [k: string] : any} = {};
+    const proibidos = ['id', 'latidude', 'longitude'];
+    let edit = false;
+    
+    Estabelecimento.fields.forEach(campo => {
+        if (body[campo.name] !== undefined && !proibidos.includes(campo.name)) {
+            data[campo.name] = body[campo.name];
+            edit = true;
+        }
+    });
+
+    if (!edit) {
+        resp.errors.push({
+            msg: 'Nada para editar'
+        });
+        return res.status(400).send(resp);
+    }
+
+    if(body.rua || body.numero || body.bairro || body.cidade || body.estado || body.cep ){
+        const CepCoords = require("coordenadas-do-cep");
+        const coordenadas = await CepCoords.getByEndereco(`${body.estado || estabelecimento.estado}, ${body.rua || estabelecimento.rua} ${body.numero || estabelecimento.numero}, ${body.cep || estabelecimento.cep}`);
+    
+        const estabelecimentoExiste = <IEstabelecimento>await Estabelecimento.GetFirst(`latitude = '${coordenadas.lat}' AND longitude = '${coordenadas.lon}' and id != '${params.id}'`);
+        if (estabelecimentoExiste !== null) {
+            resp.errors.push({
+                msg: "Voce já cadastrou um estabelecimento nessas coordenadas"
+            });
+            return res.status(400).send(resp);
+        }
+
+        payload.latitude = coordenadas.lat;
+        payload.longitude = coordenadas.lon;
+    }
+
+    const create = await Estabelecimento.Update(payload, `id = '${params.id}'`);
+    if (create.status !== 1) {
+        resp.errors.push({
+            msg: "Erro ao gravar no banco!"
+        });
+        return res.status(500).send(resp);
+    }
+    
+    resp.status = 1;
+    resp.msg = 'Estabelecimento atualizado com sucesso';
+    res.send(resp);
+});
+
+
 export default routes;
