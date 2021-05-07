@@ -137,6 +137,7 @@ class Sessao extends Classes {
                 
                 // Estabelecimento
                 { uri: /\/estabelecimento/, method: 'get' },
+                { uri: /\/estabelecimento\/categoria\/[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?/, method: 'get' },
                 { uri: /\/estabelecimento\/[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?/, method: 'get' },
 
                 // Assinatura

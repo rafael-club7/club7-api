@@ -1,3 +1,4 @@
+import DB from '../System/DB';
 import Classes from '../System/Classes';
 
 export interface IEstabelecimento
@@ -5,6 +6,7 @@ export interface IEstabelecimento
     id: string;
     parceiro: string;
     nome?: string;
+    categoria?: string;
     tem_wifi: number;
     wifi_nome: string;
     wifi_senha: string;
@@ -67,6 +69,44 @@ class Estabelecimento extends Classes {
         }
 
         return errors;
+    }
+
+    static async GetByCategoria(categoria: string) : Promise<IEstabelecimento[]> {
+        const db = new DB("");
+
+        let query = '';
+        query += `SELECT `;
+        query += `    e.id,`;
+        query += `    e.parceiro,`;
+        query += `    p.nome,`;
+        query += `    c.nome as categoria,`;
+        query += `    e.tem_wifi,`;
+        query += `    e.wifi_nome,`;
+        query += `    e.wifi_senha,`;
+        query += `    e.tem_banheiro,`;
+        query += `    e.tem_local_descanso,`;
+        query += `    e.tem_local_carregar_celular,`;
+        query += `    e.rua,`;
+        query += `    e.numero,`;
+        query += `    e.bairro,`;
+        query += `    e.cidade,`;
+        query += `    e.estado,`;
+        query += `    e.cep,`;
+        query += `    e.complemento,`;
+        query += `    e.latitude,`;
+        query += `    e.longitude `;
+        query += `FROM estabelecimento e`;
+        query += `    INNER JOIN usuario p ON p.id = e.parceiro`;
+        query += `    INNER JOIN categoria_estabelecimento c ON c.id = p.categoria `;
+        query += `WHERE p.categoria = '${categoria}'`;
+        
+        let estabelecimentos = [];
+        try{
+            estabelecimentos =  <IEstabelecimento[]>await db.Query(query);
+        }catch(e){
+            console.log(e);
+        }
+        return estabelecimentos;
     }
 }
 

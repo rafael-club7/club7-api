@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import Usuario, { IUsuario } from '../classes/Usuario';
 import Estabelecimento, { IEstabelecimento } from '../classes/Estabelecimento';
+import CategoriaEstabelecimento, { ICategoriaEstabelecimento } from '../classes/CategoriaEstabelecimento';
 import Util from '../System/Util';
 
 const routes = Router();
@@ -73,6 +74,31 @@ routes.post(`/estabelecimento`, async (req, res) => {
     res.send(resp);
 });
 
+// [GET] => /estabelecimento/categoria/:id
+routes.get(`/estabelecimento/categoria/:id`, async (req, res) => {
+    const { params } = req;
+    const resp = {
+        status: 0,
+        msg: '',
+        data: null,
+        errors: []
+    };
+    
+    const categoria =  <ICategoriaEstabelecimento>await CategoriaEstabelecimento.GetFirst(`id = '${params.id}'`);
+    if (categoria === null) {
+        resp.errors.push({
+            msg: 'Categoria não encontrado!'
+        });
+        return res.status(404).send(resp);
+    }
+
+    const estabelecimentos = await Estabelecimento.GetByCategoria(params.id);  
+
+    resp.status = 1;
+    resp.data = estabelecimentos;
+    res.send(resp);
+});
+
 // [GET] => /estabelecimento/:id
 routes.get(`/estabelecimento/:id`, async (req, res) => {
     const { params } = req;
@@ -123,6 +149,8 @@ routes.get('/estabelecimento', async (req, res) => {
     for (const i in estabelecimentos) {
         const parceiro = <IUsuario> await Usuario.GetFirst(`id = '${estabelecimentos[i].parceiro}'`);
         estabelecimentos[i].nome = parceiro.nome;
+        const categoria = <ICategoriaEstabelecimento> await CategoriaEstabelecimento.GetFirst(`id = '${parceiro.categoria}'`);
+        estabelecimentos[i].categoria = categoria.nome;
     }
 
     res.set('X-TOTAL-COUNT', await Estabelecimento.Count(where));
