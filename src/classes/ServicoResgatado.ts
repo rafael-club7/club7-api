@@ -1,5 +1,5 @@
 import Classes from '../System/Classes';
-import Servico, { getTipoResgateName, IServico } from './Servico';
+import { getTipoResgateName, IServico } from './Servico';
 import { IUsuario } from './Usuario';
 
 export interface IServicoResgatado
@@ -13,11 +13,6 @@ export interface IServicoResgatado
     status: string|number;
 }
 
-interface DataResponse {
-    status: number;
-    msg: string;
-    data?: { [k: string] : any };
-}
 
 class ServicoResgatado extends Classes {
     static table = 'servico_resgatado';
@@ -33,11 +28,6 @@ class ServicoResgatado extends Classes {
     ];
 
     static async servicoValido(usuario: IUsuario, servico: IServico) : Promise<IServico>{
-        const resp : DataResponse = {
-            status: 1,
-            msg: ""
-        };
-        
         const hoje = new Date();
         if(servico.validade !== null && new Date(servico.validade) < hoje){
             servico.status = 0;
@@ -84,7 +74,7 @@ class ServicoResgatado extends Classes {
         const servicoResgatadoHoje = <IServicoResgatado>await ServicoResgatado.GetFirst(`estabelecimento = '${servico.estabelecimento}' AND data > '${hoje.toJSON()}' AND usuario = '${usuario.id}'`);
         if (servicoResgatadoHoje !== null) {
             // Você já resgatou um serviço aqui hoje!
-            resp.status = 0;
+            servico.status = 0;
             servico.erro_resgate = "Você já resgatou um serviço aqui hoje!";
             
             if(servicoResgatadoHoje.servico === servico.id && servicoResgatadoHoje.status === 1){
