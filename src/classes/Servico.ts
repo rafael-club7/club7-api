@@ -31,6 +31,8 @@ export interface IServico
     tipo_resgate: string|number;
     estabelecimento: string;
     validade: string;
+    codigo_resgate?: string;
+    erro_resgate?: string;
     status: string|number;
 }
 

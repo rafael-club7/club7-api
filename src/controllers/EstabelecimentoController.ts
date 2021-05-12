@@ -50,6 +50,7 @@ routes.post(`/estabelecimento`, async (req, res) => {
         tem_wifi: body.tem_wifi,
         wifi_nome: body.wifi_nome,
         wifi_senha: body.wifi_senha,
+        telefone: body.telefone,
         rua: body.rua,
         numero: body.numero,
         cep: body.cep,
@@ -70,6 +71,7 @@ routes.post(`/estabelecimento`, async (req, res) => {
     }
     
     resp.status = 1;
+    resp.data = payload;
     resp.msg = 'Estabelecimento cadastrado com sucesso';
     res.send(resp);
 });
@@ -123,6 +125,7 @@ routes.get(`/estabelecimento/:id`, async (req, res) => {
     resp.status = 1;
     resp.data = {
         nome: parceiro.nome,
+        descricao: parceiro.descricao,
         cnpj: parceiro.cnpj,
         imagem: parceiro.imagem,
         ...estabelecimento

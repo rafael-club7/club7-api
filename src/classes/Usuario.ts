@@ -21,6 +21,7 @@ export interface IUsuario {
 
     // Estabelecimento
 
+    descricao?: string;
     cnpj?: string;
     imagem?: string;
     categoria?: string;
@@ -44,6 +45,7 @@ class Usuario extends Classes {
         { name: 'data_criacao', type: 'string', required: false },
 
         // info  de estabelecimento
+        { name: 'descricao', type: 'string', required: false },
         { name: 'cnpj', type: 'string', required: false },
         { name: 'imagem', type: 'string', required: false },
         

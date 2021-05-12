@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import ServicoResgatado from '../Classes/ServicoResgatado';
 import Servico, { IServico } from '../Classes/Servico';
 import Usuario, { IUsuario } from '../Classes/Usuario';
 import Util from '../System/Util';
@@ -90,6 +91,7 @@ routes.get('/servico/estabelecimento/:id', async (req, res) => {
         errors: []
     };
 
+
     const estabelecimento = <IUsuario> await Usuario.GetFirst(`id = '${params.id}' and tipo = 2`);
     
     if (estabelecimento === null) {
@@ -105,8 +107,10 @@ routes.get('/servico/estabelecimento/:id', async (req, res) => {
 
     where = (where === '') ? `estabelecimento = '${estabelecimento.id}'` : `(${where}) AND estabelecimento = '${estabelecimento.id}'`;
     
-
     const servicos = <IServico[]> await Servico.Get(where, order_by, limit);
+    
+    for (const i in servicos) 
+        servicos[i] = await ServicoResgatado.servicoValido(<IUsuario>req.usuario, servicos[i]);
 
     res.set('X-TOTAL-COUNT', await Servico.Count(where));
 

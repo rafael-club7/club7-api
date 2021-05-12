@@ -15,6 +15,7 @@ exports.up = async function(database, utf8 = false) {
                 table.integer('tem_local_descanso').notNullable();
                 table.integer('tem_local_carregar_celular').notNullable();
 
+                table.string('telefone', 11);
                 table.string('rua', 40);
                 table.string('numero', 10);
                 table.string('bairro', 30);

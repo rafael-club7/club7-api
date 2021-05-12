@@ -21,6 +21,7 @@ exports.up = async function(database, utf8 = false) {
 
 
                 // INFO de Estabelecimento
+                table.text('descricao');
                 table.integer('cnpj', 14);
                 table.string('imagem', 50);
 

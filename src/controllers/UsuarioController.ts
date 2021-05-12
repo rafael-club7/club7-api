@@ -29,6 +29,7 @@ routes.post(`/usuario`, async (req, res) => {
         senha: body.senha,
         cpf: body.cpf,
         cnpj: body.cnpj,
+        descricao: body.descricao,
         categoria: body.categoria,
         data_criacao: new Date().toJSON(),
         tipo: body.tipo,

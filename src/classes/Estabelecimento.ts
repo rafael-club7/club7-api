@@ -14,6 +14,7 @@ export interface IEstabelecimento
     tem_local_descanso: number;
     tem_local_carregar_celular: number;
 
+    telefone: string;
     rua: string;
     numero: string;
     bairro: string;
@@ -39,6 +40,7 @@ class Estabelecimento extends Classes {
         { name: 'tem_local_descanso', type: 'number', required: true },
         { name: 'tem_local_carregar_celular', type: 'number', required: true },
 
+        { name: 'telefone', type: 'string', required: true },
         { name: 'rua', type: 'string', required: true },
         { name: 'numero', type: 'string', required: true },
         { name: 'bairro', type: 'string', required: true },
