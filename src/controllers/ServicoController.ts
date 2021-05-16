@@ -112,7 +112,7 @@ routes.get('/servico/estabelecimento/:id', async (req, res) => {
     for (const i in servicos) 
         servicos[i] = await ServicoResgatado.servicoValido(<IUsuario>req.usuario, servicos[i]);
 
-    res.set('X-TOTAL-COUNT', await Servico.Count(where));
+    res.set('X-TOTAL-COUNT', await Servico.Count(where)); 
 
     resp.status = 1;
     resp.data = servicos;
