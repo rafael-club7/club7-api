@@ -27,6 +27,7 @@ routes.post(`/usuario`, async (req, res) => {
         nome_normalizado: Util.toNormal(body.nome),
         email: body.email,
         senha: body.senha,
+        celular: body.celular,
         cpf: body.cpf,
         cnpj: body.cnpj,
         descricao: body.descricao,
@@ -49,11 +50,17 @@ routes.post(`/usuario`, async (req, res) => {
         payload.indicado = body.indicado;
     }
 
-    const usuarioExiste = await Usuario.GetFirst(`email = '${payload.email}' ${payload.tipo === 1 ? `OR cpf = '${payload.cpf}'`: ''} ${payload.tipo === 2 ? `OR cnpj = '${payload.cnpj}'`: ''}`);
+    const usuarioExiste = await Usuario.GetFirst(`email = '${payload.email}' OR celular = '${payload.celular}' ${payload.tipo === 1 ? `OR cpf = '${payload.cpf}'`: ''} ${payload.tipo === 2 ? `OR cnpj = '${payload.cnpj}'`: ''}`);
     if (usuarioExiste !== null) {
         if (usuarioExiste.email === payload.email) {
             resp.errors.push({
                 msg: "Este email já está sendo utilizado"
+            });
+        }
+        
+        if (usuarioExiste.celular === payload.celular) {
+            resp.errors.push({
+                msg: "Este celular já está sendo utilizado"
             });
         }
 

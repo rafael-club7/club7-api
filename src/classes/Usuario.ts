@@ -19,8 +19,15 @@ export interface IUsuario {
     confirmacao_email?: number;
     status: string | number;
 
+    rua?: string;
+    numero?: string;
+    bairro?: string;
+    cidade?: string;
+    estado?: string;
+    cep?: string;
+    complemento?: string;
+    
     // Estabelecimento
-
     descricao?: string;
     cnpj?: string;
     imagem?: string;
@@ -43,6 +50,13 @@ class Usuario extends Classes {
         { name: 'confirmacao_email', type: 'number', required: false },
         { name: 'indicado', type: 'string', required: false },
         { name: 'data_criacao', type: 'string', required: false },
+        { name: 'rua', type: 'string', required: false },
+        { name: 'numero', type: 'string', required: false },
+        { name: 'bairro', type: 'string', required: false },
+        { name: 'cidade', type: 'string', required: false },
+        { name: 'estado', type: 'string', required: false },
+        { name: 'cep', type: 'string', required: false },
+        { name: 'complemento', type: 'string', required: false },
 
         // info  de estabelecimento
         { name: 'descricao', type: 'string', required: false },

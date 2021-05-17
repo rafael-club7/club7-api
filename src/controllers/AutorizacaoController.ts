@@ -51,7 +51,7 @@ routes.post('/login', async (req, res) => {
 
     if(usuario.status === 0){
         resp.errors.push({
-            msg: "Esse usuário ainda não está ativo!"
+            msg: "Acesse seu email para ativar sua conta!"
         });
         return res.status(403).send(resp);
     }
