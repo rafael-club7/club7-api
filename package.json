@@ -1,7 +1,12 @@
 {
-    "name": "geolocalizador-api",
-    "version": "1.0.0",
+    "name": "club7-api-geolocalizador",
     "description": "Api do Geolocalizador do Club7",
+    "author": {
+        "name": "Rafael Coelho",
+        "email": "rafael.coelho@clubsete.com.br",
+        "url": "https://github.com/rafa-coelho"
+    },
+    "version": "1.0.0",
     "main": "src/index.ts",
     "scripts": {
         "dev": "nodemon src/index.ts",
@@ -9,7 +14,6 @@
         "migrate": "node ./database/migrate.js",
         "rollback": "node ./database/rollback.js"
     },
-    "author": "Rafael Coelho <rafaelcoelho8@yahoo.com.br>",
     "license": "MIT",
     "devDependencies": {
         "@types/cors": "^2.8.10",
