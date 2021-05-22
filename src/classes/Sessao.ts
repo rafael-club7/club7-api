@@ -67,6 +67,7 @@ class Sessao extends Classes {
             { uri: /\/login/, method: 'post' },
             { uri: /\/logout/, method: 'post' },
             { uri: /\/confirmar-email/, method: 'post' },
+            { uri: /\/categoria-estabelecimento/, method: 'get' },
         ];
 
         // Não precisa de sessão
@@ -133,7 +134,7 @@ class Sessao extends Classes {
                 { uri: /\/plano\/[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?/, method: 'get' },
                 
                 // Categoria Estabelecimento
-                { uri: /\/categoria-estabelecimento/, method: 'get' },
+                
                 { uri: /\/categoria-estabelecimento\/[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?/, method: 'get' },
                 
                 // Estabelecimento
