@@ -2,7 +2,6 @@ import { Router } from 'express';
 import Mailer from '../System/Mailer';
 import Usuario, { IUsuario } from '../classes/Usuario';
 import Util from '../System/Util';
-import { Console } from 'node:console';
 
 const routes = Router();
 
