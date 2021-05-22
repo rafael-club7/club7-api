@@ -2,6 +2,7 @@ import { Router } from 'express';
 import Mailer from '../System/Mailer';
 import Usuario, { IUsuario } from '../classes/Usuario';
 import Util from '../System/Util';
+import { Console } from 'node:console';
 
 const routes = Router();
 
@@ -85,7 +86,7 @@ routes.post(`/usuario`, async (req, res) => {
         }
     }
 
-    const link = `${process.env.APP_URL}/confirmar-email?user=${payload.id}`;
+    const link = `${req.get('origin')}/${body.url}?user=${payload.id}`;
 
     const mailSent = (payload.tipo === 1) ?
         await Mailer.EnviarEmailCadastroUsuario(payload, link) :
