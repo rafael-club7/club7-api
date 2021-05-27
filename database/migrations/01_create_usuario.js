@@ -20,7 +20,7 @@ exports.up = async function(database, utf8 = false) {
                 table.integer('mudar_senha').defaultTo(0);
 
 
-                // INFO de Estabelecimento
+                // INFO de Parceiro
                 table.text('descricao');
                 table.integer('cnpj', 14);
                 table.string('imagem', 50);
@@ -32,12 +32,20 @@ exports.up = async function(database, utf8 = false) {
                 table.string('estado', 30);
                 table.string('cep', 10);
                 table.string('complemento', 50);
+                table.integer('tem_wifi');
 
-                // table.string('latitude', 20);
-                // table.string('longitude', 20);
+                table.string('wifi_nome', 45);
+                table.string('wifi_senha', 45);
+
+                table.integer('tem_banheiro');
+                table.integer('tem_local_descanso');
+                table.integer('tem_local_carregar_celular');
+
+                table.string('latitude', 20);
+                table.string('longitude', 20);
 
                 table.string('categoria', 45);
-                table.foreign('categoria').references('id').inTable('categoria_estabelecimento');
+                table.foreign('categoria').references('id').inTable('categoria_parceiro');
 
                 table.integer('confirmacao_email').defaultTo(0);
                 table.integer('status').defaultTo(1);

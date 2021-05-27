@@ -15,8 +15,8 @@ exports.up = async function(database, utf8 = false) {
                 table.integer('tipo_resgate').notNullable();
                 table.string('validade');
 
-                table.string('estabelecimento', 45).notNullable();
-                table.foreign('estabelecimento').references('id').inTable('usuario');
+                table.string('parceiro', 45).notNullable();
+                table.foreign('parceiro').references('id').inTable('usuario');
 
                 table.integer('status').defaultTo(1);
                 table.integer('deleted').defaultTo(0);

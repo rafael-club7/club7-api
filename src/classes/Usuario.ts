@@ -2,7 +2,8 @@ import Util from '../System/Util';
 import Classes from '../System/Classes';
 import Assinatura, { IAssinatura } from './Assinatura';
 import Pagamento, { IPagamento } from './Pagamento';
-import CategoriaEstabelecimento from './CategoriaEstabelecimento';
+import CategoriaParceiro from './CategoriaParceiro';
+import DB from '../System/DB';
 
 export interface IUsuario {
     id: string;
@@ -26,12 +27,20 @@ export interface IUsuario {
     estado?: string;
     cep?: string;
     complemento?: string;
+    latitude?: string;
+    longitude?: string;
     
-    // Estabelecimento
+    // Parceiro
     descricao?: string;
     cnpj?: string;
     imagem?: string;
     categoria?: string;
+    tem_wifi?: number;
+    wifi_nome?: string;
+    wifi_senha?: string;
+    tem_banheiro?: number;
+    tem_local_descanso?: number;
+    tem_local_carregar_celular?: number;
 }
 
 class Usuario extends Classes {
@@ -58,7 +67,7 @@ class Usuario extends Classes {
         { name: 'cep', type: 'string', required: false },
         { name: 'complemento', type: 'string', required: false },
 
-        // info  de estabelecimento
+        // info  de Parceiro
         { name: 'descricao', type: 'string', required: false },
         { name: 'cnpj', type: 'string', required: false },
         { name: 'imagem', type: 'string', required: false },
@@ -115,7 +124,7 @@ class Usuario extends Classes {
                     msg: `O campo "Categoria" é obrigatório!`
                 });
             }else{
-                const categoriaExiste = await CategoriaEstabelecimento.GetFirst(`id = '${data.categoria}'`);
+                const categoriaExiste = await CategoriaParceiro.GetFirst(`id = '${data.categoria}'`);
                 if(categoriaExiste === null){
                     errors.push({
                         msg: "Categoria não encontrada!"
@@ -168,6 +177,44 @@ class Usuario extends Classes {
     static async getIndicados (usuarioId: string): Promise<IUsuario[]> {
         const usuarios = <IUsuario[]>await Usuario.Get(`indicado = '${usuarioId}'`);
         return usuarios.filter(x => this.hasPlanoAtivo(x.id));
+    }
+
+    static async GetParceiroPorCategoria(categoria: string) : Promise<IUsuario[]>{
+        const db = new DB("");
+        
+        let query = '';
+        query += `SELECT `;
+        query += `    u.id,`;
+        query += `    u.parceiro,`;
+        query += `    u.nome,`;
+        query += `    c.nome as categoria,`;
+        query += `    u.tem_wifi,`;
+        query += `    u.wifi_nome,`;
+        query += `    u.wifi_senha,`;
+        query += `    u.tem_banheiro,`;
+        query += `    u.tem_local_descanso,`;
+        query += `    u.tem_local_carregar_celular,`;
+        query += `    u.rua,`;
+        query += `    u.numero,`;
+        query += `    u.bairro,`;
+        query += `    u.cidade,`;
+        query += `    u.estado,`;
+        query += `    u.cep,`;
+        query += `    u.complemento,`;
+        query += `    u.latitude,`;
+        query += `    u.longitude `;
+        query += `FROM USUARIO u `;
+        query += `    INNER JOIN categoria_parceiro c ON c.id = u.categoria `;
+        query += `WHERE p.categoria = '${categoria}' AND u.tipo = 2`;
+
+        let parceiros = [];
+        try{
+            parceiros =  <IUsuario[]>await db.Query(query);
+        }catch(e){
+            console.log(e);
+        }
+        
+        return parceiros;
     }
 
 }

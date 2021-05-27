@@ -4,10 +4,10 @@ import AutorizacaoController from './AutorizacaoController';
 import UsuarioController from './UsuarioController';
 import SessaoController from './SessaoController';
 import PlanoController from './PlanoController';
-import CategoriaEstabelecimentoController from './CategoriaEstabelecimentoController';
+import CategoriaParceiroController from './CategoriaParceiroController';
 import AssinaturaController from './AssinaturaController';
 import ServicoController from './ServicoController';
-import EstabelecimentoController from './EstabelecimentoController';
+import ParceiroController from './ParceiroController';
 import IndicacaoController from './IndicacaoController';
 import ServicoResgatadoController from './ServicoResgatadoController';
 
@@ -18,10 +18,10 @@ const routes = Router();
     SessaoController, 
     AutorizacaoController, 
     PlanoController, 
-    CategoriaEstabelecimentoController,
+    CategoriaParceiroController,
     AssinaturaController,
     ServicoController,
-    EstabelecimentoController,
+    ParceiroController,
     IndicacaoController,
     ServicoResgatadoController,
 ].forEach((route) => {

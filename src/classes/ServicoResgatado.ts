@@ -6,7 +6,7 @@ export interface IServicoResgatado
 {
     id: string;
     usuario: string;
-    estabelecimento: string;
+    parceiro: string;
     servico: string;
     codigo: string;
     data: string;
@@ -20,7 +20,7 @@ class ServicoResgatado extends Classes {
     public static fields = [
         { name: 'id', type: 'string', required: false },
         { name: 'usuario', type: 'string', required: false },
-        { name: 'estabelecimento', type: 'string', required: false },
+        { name: 'parceiro', type: 'string', required: false },
         { name: 'codigo', type: 'string', required: false },
         { name: 'servico', type: 'string', required: true },
         { name: 'data', type: 'string', required: false },
@@ -71,7 +71,7 @@ class ServicoResgatado extends Classes {
         hoje.setMinutes(0);
         hoje.setSeconds(0);
         
-        const servicoResgatadoHoje = <IServicoResgatado>await ServicoResgatado.GetFirst(`estabelecimento = '${servico.estabelecimento}' AND data > '${hoje.toJSON()}' AND usuario = '${usuario.id}'`);
+        const servicoResgatadoHoje = <IServicoResgatado>await ServicoResgatado.GetFirst(`parceiro = '${servico.parceiro}' AND data > '${hoje.toJSON()}' AND usuario = '${usuario.id}'`);
         if (servicoResgatadoHoje !== null) {
             // Você já resgatou um serviço aqui hoje!
             servico.status = 0;

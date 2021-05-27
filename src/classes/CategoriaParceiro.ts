@@ -1,6 +1,6 @@
 import Classes from '../System/Classes';
 
-export interface ICategoriaEstabelecimento
+export interface ICategoriaParceiro
 {
     id: string;
     nome: string;
@@ -9,8 +9,8 @@ export interface ICategoriaEstabelecimento
     status: string|number;
 }
 
-class CategoriaEstabelecimento extends Classes {
-    static table = 'categoria_estabelecimento';
+class CategoriaParceiro extends Classes {
+    static table = 'categoria_parceiro';
 
     public static fields = [
         { name: 'id', type: 'string', required: false },
@@ -22,4 +22,4 @@ class CategoriaEstabelecimento extends Classes {
     
 }
 
-export default CategoriaEstabelecimento;
+export default CategoriaParceiro;

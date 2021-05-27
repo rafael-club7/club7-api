@@ -2,6 +2,7 @@ import Classes from '../System/Classes';
 import Util from '../System/Util';
 import { NextFunction, Request, Response } from 'express';
 import Usuario, { IUsuario } from './Usuario';
+import Assinatura from './Assinatura';
 
 export interface ISessao
 {
@@ -67,7 +68,7 @@ class Sessao extends Classes {
             { uri: /\/login/, method: 'post' },
             { uri: /\/logout/, method: 'post' },
             { uri: /\/confirmar-email/, method: 'post' },
-            { uri: /\/categoria-estabelecimento/, method: 'get' },
+            { uri: /\/categoria-parceiro/, method: 'get' },
         ];
 
         // Não precisa de sessão
@@ -113,14 +114,12 @@ class Sessao extends Classes {
             { uri: /\/nova-senha/, method: 'post' },
             { uri: /\/nova-senha/, method: 'put' },
         ];
+        // TODO: Validar Assinatura
+        const assinaturaAtiva = await Assinatura.Ativa(usuario);
+        
+        sessao.data.statusAssinatura = assinaturaAtiva.code;
 
         if (!all.find(x => matchExact(x.uri, path) && method.toLowerCase() === x.method)) {
-            // TODO: Validar Assinatura
-            
-
-                       
-            // TODO: Melhorar Permissoes
-            
             let permissoes = [
                 // Usuario
                 { uri: /\/usuario/, method: 'get' },
@@ -133,14 +132,14 @@ class Sessao extends Classes {
                 { uri: /\/plano/, method: 'get' },
                 { uri: /\/plano\/[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?/, method: 'get' },
                 
-                // Categoria Estabelecimento
+                // Categoria Parceiro
                 
-                { uri: /\/categoria-estabelecimento\/[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?/, method: 'get' },
+                { uri: /\/categoria-parceiro\/[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?/, method: 'get' },
                 
-                // Estabelecimento
-                { uri: /\/estabelecimento/, method: 'get' },
-                { uri: /\/estabelecimento\/categoria\/[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?/, method: 'get' },
-                { uri: /\/estabelecimento\/[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?/, method: 'get' },
+                // Parceiro
+                { uri: /\/parceiro/, method: 'get' },
+                { uri: /\/parceiro\/categoria\/[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?/, method: 'get' },
+                { uri: /\/parceiro\/[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?/, method: 'get' },
 
                 // Assinatura
                 { uri: /\/assinatura/, method: 'post' },
@@ -150,11 +149,11 @@ class Sessao extends Classes {
                 
                 // Serviço
                 { uri: /\/servico/, method: 'get' },
-                { uri: /\/servico\/estabelecimento\/[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?/, method: 'get' },
+                { uri: /\/servico\/parceiro\/[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?/, method: 'get' },
                 { uri: /\/servico\/[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?/, method: 'get' },
                 
-                // Detalhe do Estabelecimento
-                { uri: /\/estabelecimento\/[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?/, method: 'get' },
+                // Detalhe do Parceiro
+                { uri: /\/parceiro\/[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?/, method: 'get' },
                 
                 // Indicações
                 { uri: /\/indicacoes/, method: 'get' },
@@ -165,15 +164,15 @@ class Sessao extends Classes {
                 { uri: /\/servico-resgatado\/[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?/, method: 'get' },
             ];
             
-            // Estabelecimento
+            // Parceiro
             if([ 9, 2 ].includes(usuario.tipo)){
                 permissoes = [
                     ...permissoes,
                     
-                    // Estabelecimento
-                    { uri: /\/estabelecimento/, method: 'post' },
-                    { uri: /\/estabelecimento\/[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?/, method: 'put' },
-                    { uri: /\/estabelecimento\/[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?/, method: 'delete' },
+                    // Parceiro
+                    { uri: /\/parceiro/, method: 'post' },
+                    { uri: /\/parceiro\/[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?/, method: 'put' },
+                    { uri: /\/parceiro\/[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?/, method: 'delete' },
                     
                     // Serviço
                     { uri: /\/servico/, method: 'post' },
@@ -186,7 +185,6 @@ class Sessao extends Classes {
                     { uri: /\/servico-resgatado\/[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?/, method: 'put' },
                 ];
             }
-            
             
             // ADMIN
             if(usuario.tipo === 9){
@@ -201,10 +199,10 @@ class Sessao extends Classes {
                     { uri: /\/plano\/[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?/, method: 'put' },
                     { uri: /\/plano\/[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?/, method: 'delete' },
                     
-                    // Categoria Estabelecimento
-                    { uri: /\/categoria-estabelecimento/, method: 'post' },
-                    { uri: /\/categoria-estabelecimento\/[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?/, method: 'put' },
-                    { uri: /\/categoria-estabelecimento\/[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?/, method: 'delete' },
+                    // Categoria Parceiro
+                    { uri: /\/categoria-parceiro/, method: 'post' },
+                    { uri: /\/categoria-parceiro\/[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?/, method: 'put' },
+                    { uri: /\/categoria-parceiro\/[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?/, method: 'delete' },
                     
                     // Assinatura
                     { uri: /\/assinatura/, method: 'get' },
@@ -222,8 +220,6 @@ class Sessao extends Classes {
                 });
                 return;
             }
-
-            
         }
 
         req.sessao = sessao;

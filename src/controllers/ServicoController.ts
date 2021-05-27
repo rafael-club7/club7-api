@@ -22,10 +22,10 @@ routes.post(`/servico`, async (req, res) => {
     if (resp.errors.length > 0)
         return res.status(400).send(resp);
 
-    const estabelecimentoExiste = <IUsuario> await Usuario.GetFirst(`id = '${body.estabelecimento}' and tipo = 2`);
-    if(estabelecimentoExiste === null){
+    const parceiroExiste = <IUsuario> await Usuario.GetFirst(`id = '${req.usuario.id}' and tipo = 2`);
+    if(parceiroExiste === null){
         resp.errors.push({
-            msg: "Estabelecimento não encontrado"
+            msg: "Parceiro não encontrado"
         });
         return res.status(404).send(resp);
     }
@@ -35,7 +35,7 @@ routes.post(`/servico`, async (req, res) => {
         nome: body.nome,
         nome_normalizado: Util.toNormal(body.nome),
         descricao: body.descricao,
-        estabelecimento: body.estabelecimento,
+        parceiro: parceiroExiste.id,
         desconto: body.desconto,
         tipo_desconto: body.tipo_desconto,
         tipo_resgate: body.tipo_resgate,
@@ -81,8 +81,8 @@ routes.get(`/servico`, async (req, res) => {
     res.send(resp);
 });
 
-// [GET] => /servico/estabelecimento/:id
-routes.get('/servico/estabelecimento/:id', async (req, res) => {
+// [GET] => /servico/parceiro/:id
+routes.get('/servico/parceiro/:id', async (req, res) => {
     const { params, query } = req;
     const resp = {
         status: 0,
@@ -91,12 +91,11 @@ routes.get('/servico/estabelecimento/:id', async (req, res) => {
         errors: []
     };
 
-
-    const estabelecimento = <IUsuario> await Usuario.GetFirst(`id = '${params.id}' and tipo = 2`);
+    const parceiro = <IUsuario> await Usuario.GetFirst(`id = '${params.id}' and tipo = 2`);
     
-    if (estabelecimento === null) {
+    if (parceiro === null) {
         resp.errors.push({
-            msg: 'Estabelecimento não encontrado!'
+            msg: 'Parceiro não encontrado!'
         });
         return res.status(404).send(resp);
     }
@@ -105,7 +104,7 @@ routes.get('/servico/estabelecimento/:id', async (req, res) => {
     const order_by = String((query.order_by) ? query.order_by : '');
     const limit = String((query.limit) ? query.limit : '');
 
-    where = (where === '') ? `estabelecimento = '${estabelecimento.id}'` : `(${where}) AND estabelecimento = '${estabelecimento.id}'`;
+    where = (where === '') ? `parceiro = '${parceiro.id}'` : `(${where}) AND parceiro = '${parceiro.id}'`;
     
     const servicos = <IServico[]> await Servico.Get(where, order_by, limit);
     
@@ -162,7 +161,7 @@ routes.put('/servico/:id', async (req, res) => {
         return res.status(404).send(resp);
     }
 
-    if(req.usuario.tipo !== 9 && req.usuario.id !== servicoGet.estabelecimento){
+    if(req.usuario.tipo !== 9 && req.usuario.id !== servicoGet.parceiro){
         resp.errors.push({
             msg: "Você não tem permissão para editar esse serviço!"
         });
@@ -171,7 +170,7 @@ routes.put('/servico/:id', async (req, res) => {
 
     const data : { [k: string] : any} = {};
     
-    const proibidos = ['id', 'estabelecimento', 'data_inicio'];
+    const proibidos = ['id', 'parceiro', 'data_inicio'];
     let edit = false;
     
     Servico.fields.forEach(campo => {
@@ -225,7 +224,7 @@ routes.delete('/servico/:id', async (req, res) => {
         return res.status(404).send(resp);
     }
 
-    if(req.usuario.tipo !== 9 && req.usuario.id !== servicoGet.estabelecimento){
+    if(req.usuario.tipo !== 9 && req.usuario.id !== servicoGet.parceiro){
         resp.errors.push({
             msg: "Você não tem permissão para excluir esse registro!"
         });

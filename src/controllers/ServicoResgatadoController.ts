@@ -69,7 +69,7 @@ routes.post(`/servico-resgatado`, async (req, res) => {
     hoje.setMinutes(0);
     hoje.setSeconds(0);
 
-    const servicoResgatadoHoje = <IServicoResgatado>await ServicoResgatado.GetFirst(`estabelecimento = '${servico.estabelecimento}' AND data > '${hoje.toJSON()}' AND usuario = '${req.usuario.id}'`);
+    const servicoResgatadoHoje = <IServicoResgatado>await ServicoResgatado.GetFirst(`parceiro = '${servico.parceiro}' AND data > '${hoje.toJSON()}' AND usuario = '${req.usuario.id}'`);
     if (servicoResgatadoHoje !== null) {
         resp.errors.push({
             msg: "Você já resgatou um serviço aqui hoje!"
@@ -83,7 +83,7 @@ routes.post(`/servico-resgatado`, async (req, res) => {
         data: new Date().toJSON(),
         servico: body.servico,
         usuario: req.usuario.id,
-        estabelecimento: servico.estabelecimento,
+        parceiro: servico.parceiro,
         status: 1
     };
 
@@ -120,7 +120,7 @@ routes.get(`/servico-resgatado`, async (req, res) => {
         where = (where !== '') ? `(${where}) AND usuario = '${req.usuario.id}'` : `usuario = '${req.usuario.id}'`;
 
     if (req.usuario.tipo === 2)
-        where = (where !== '') ? `(${where}) AND estabelecimento = '${req.usuario.id}'` : `estabelecimento = '${req.usuario.id}'`;
+        where = (where !== '') ? `(${where}) AND parceiro = '${req.usuario.id}'` : `parceiro = '${req.usuario.id}'`;
 
     const servicos = <IServicoResgatado[]>await ServicoResgatado.Get(where, order_by, limit);
 
@@ -141,7 +141,7 @@ routes.post(`/servico-resgatado/:codigo`, async (req, res) => {
         errors: []
     };
 
-    const servicoResgatado = <IServicoResgatado>await ServicoResgatado.GetFirst(`codigo = '${params.codigo}' AND estabelecimento = '${req.usuario.id}'`);
+    const servicoResgatado = <IServicoResgatado>await ServicoResgatado.GetFirst(`codigo = '${params.codigo}' AND parceiro = '${req.usuario.id}'`);
 
     if (servicoResgatado === null) {
         resp.errors.push({
@@ -157,7 +157,7 @@ routes.post(`/servico-resgatado/:codigo`, async (req, res) => {
         return res.status(403).send(resp);
     }
 
-    const update = await ServicoResgatado.Update({ status: 2 }, `codigo = '${params.codigo}' AND estabelecimento = '${req.usuario.id}'`);
+    const update = await ServicoResgatado.Update({ status: 2 }, `codigo = '${params.codigo}' AND parceiro = '${req.usuario.id}'`);
     if (update.status !== 1) {
         resp.errors.push({
             msg: "Erro ao registrar o resgate do Serviço!"
@@ -188,7 +188,7 @@ routes.get(`/servico-resgatado/:id`, async (req, res) => {
         where = `(${where}) AND usuario = '${req.usuario.id}'`;
 
     if (req.usuario.tipo === 2)
-        where = `(${where}) AND estabelecimento = '${req.usuario.id}'`;
+        where = `(${where}) AND parceiro = '${req.usuario.id}'`;
 
     const servico = <IServicoResgatado>await ServicoResgatado.GetFirst(where);
 

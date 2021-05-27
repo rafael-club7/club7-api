@@ -29,7 +29,7 @@ export interface IServico
     desconto: number;
     tipo_desconto: string|number;
     tipo_resgate: string|number;
-    estabelecimento: string;
+    parceiro: string;
     validade: string;
     codigo_resgate?: string;
     erro_resgate?: string;
@@ -44,7 +44,7 @@ class Servico extends Classes {
         { name: 'nome', type: 'string', required: true },
         { name: 'descricao', type: 'string', required: false },
         { name: 'nome_normalizado', type: 'string', required: false },
-        { name: 'estabelecimento', type: 'string', required: true },
+        { name: 'parceiro', type: 'string', required: false },
         { name: 'desconto', type: 'number', required: true },
         { name: 'tipo_desconto', type: 'number', required: true },
         { name: 'tipo_resgate', type: 'number', required: true },

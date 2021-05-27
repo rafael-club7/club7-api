@@ -110,7 +110,6 @@ routes.post(`/usuario`, async (req, res) => {
     resp.msg = 'Usuário criado com sucesso!';
     resp.data = payload;
     res.send(resp);
-
 });
 
 // [GET] => /usuario
@@ -217,7 +216,7 @@ routes.put('/usuario/:id', async (req, res) => {
     }
 
     const data : { [k: string] : any} = {};
-    const proibidos = ['id', 'status', 'tipo', 'rua', 'numero', 'bairro', 'cidade', 'estado', 'complemento', 'cep'];
+    const proibidos = ['id', 'status', 'tipo'];
     let edit = false;
     
     Usuario.fields.forEach(campo => {
@@ -258,6 +257,13 @@ routes.put('/usuario/:id', async (req, res) => {
             });
             return res.status(400).send(resp);
         }
+    }
+
+    if(body.rua || body.numero || body.bairro || body.cidade || body.estado || body.cep ){
+        const CepCoords = require("coordenadas-do-cep");
+        const coordenadas = await CepCoords.getByEndereco(`${body.estado || usuarioGet.estado}, ${body.rua || usuarioGet.rua} ${body.numero || usuarioGet.numero}, ${body.cep || usuarioGet.cep}`);
+        data.latitude = coordenadas.lat;
+        data.longitude = coordenadas.lon;
     }
 
     const update = await Usuario.Update(data, `id = '${params.id}'`);
