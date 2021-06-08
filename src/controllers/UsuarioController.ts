@@ -2,6 +2,7 @@ import { Router } from 'express';
 import Mailer from '../System/Mailer';
 import Usuario, { IUsuario } from '../classes/Usuario';
 import Util from '../System/Util';
+import CategoriaParceiro from '../classes/CategoriaParceiro';
 
 const routes = Router();
 
@@ -127,6 +128,13 @@ routes.get(`/usuario`, async (req, res) => {
     const limit = String((query.limit) ? query.limit : '');
 
     const usuarios = <IUsuario[]> await Usuario.Get(where, order_by, limit);
+
+    for (let i = 0; i < usuarios.length; i++) {
+        if(usuarios[i].categoria !== null){
+            usuarios[i].categoria = (await CategoriaParceiro.GetFirst(`id = '${usuarios[i].categoria}'`)).nome;
+        }
+        
+    }
 
     res.set('X-TOTAL-COUNT', await Usuario.Count(where));
 
@@ -260,10 +268,19 @@ routes.put('/usuario/:id', async (req, res) => {
     }
 
     if(body.rua || body.numero || body.bairro || body.cidade || body.estado || body.cep ){
-        const CepCoords = require("coordenadas-do-cep");
-        const coordenadas = await CepCoords.getByEndereco(`${body.estado || usuarioGet.estado}, ${body.rua || usuarioGet.rua} ${body.numero || usuarioGet.numero}, ${body.cep || usuarioGet.cep}`);
-        data.latitude = coordenadas.lat;
-        data.longitude = coordenadas.lon;
+        try{
+            const CepCoords = require("coordenadas-do-cep");
+            const coordenadas = await CepCoords.getByEndereco(`${body.cidade || usuarioGet.cidade}, ${body.rua || usuarioGet.rua} ${body.numero || usuarioGet.numero}, ${body.cep.replace(/\D/g, '') || usuarioGet.cep.replace(/\D/g, '')}`);
+            data.latitude = coordenadas.lat;
+            data.longitude = coordenadas.lon;
+        }catch(e){
+            console.log(`Erro ao buscar coordenadas: ${e}`);
+            resp.errors.push({
+                msg: 'Erro ao buscar coordenadas do local!'
+            });
+    
+            return res.status(500).send(resp);
+        }
     }
 
     const update = await Usuario.Update(data, `id = '${params.id}'`);

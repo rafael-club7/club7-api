@@ -66,13 +66,21 @@ class Usuario extends Classes {
         { name: 'estado', type: 'string', required: false },
         { name: 'cep', type: 'string', required: false },
         { name: 'complemento', type: 'string', required: false },
-
+        
         // info  de Parceiro
         { name: 'descricao', type: 'string', required: false },
         { name: 'cnpj', type: 'string', required: false },
         { name: 'imagem', type: 'string', required: false },
-        
+        { name: 'latitude', type: 'string', required: false },
+        { name: 'longitude', type: 'string', required: false },
         { name: 'categoria', type: 'string', required: false },
+        { name: 'tem_wifi', type: 'number', required: false },
+        { name: 'wifi_nome', type: 'string', required: false },
+        { name: 'wifi_senha', type: 'string', required: false },
+        { name: 'tem_banheiro', type: 'number', required: false },
+        { name: 'tem_local_descanso', type: 'number', required: false },
+        { name: 'tem_local_carregar_celular', type: 'number', required: false },
+        
         { name: 'status', type: 'number', required: false }
     ];
 
