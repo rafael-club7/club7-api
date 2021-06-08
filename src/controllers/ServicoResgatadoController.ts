@@ -2,6 +2,7 @@ import { Router } from 'express';
 import ServicoResgatado, { IServicoResgatado } from '../Classes/ServicoResgatado';
 import Servico, { IServico, getTipoResgateName } from '../Classes/Servico';
 import Util from '../System/Util';
+import Usuario, { IUsuario } from '../classes/Usuario';
 
 const routes = Router();
 
@@ -124,7 +125,49 @@ routes.get(`/servico-resgatado`, async (req, res) => {
 
     const servicos = <IServicoResgatado[]>await ServicoResgatado.Get(where, order_by, limit);
 
+    for (let i = 0; i < servicos.length; i++) {
+        servicos[i].servico_nome = (<IServico>await Servico.GetFirst(`id = '${servicos[i].servico}'`)).nome;
+        servicos[i].usuario_nome = (<IUsuario>await Usuario.GetFirst(`id = '${servicos[i].usuario}'`)).nome;
+    }
+
     res.set('X-TOTAL-COUNT', await ServicoResgatado.Count(where));
+
+    resp.status = 1;
+    resp.data = servicos;
+    res.send(resp);
+});
+
+// [GET] => /servico-resgatado/busca
+routes.get(`/servico-resgatado/busca`, async (req, res) => {
+    const { query } = req;
+    const resp = {
+        status: 0,
+        msg: '',
+        data: null,
+        errors: []
+    };
+
+    const servicoWhere = (query.where) ? Util.utf8Decode(unescape(String(query.where))) : '';
+    const order_by = String((query.order_by) ? query.order_by : '');
+    const status = String((query.status) ? query.status : '');
+    const limit = String((query.limit) ? query.limit : '');
+
+    const servicoIds = (<IServico[]>await Servico.Get(`nome_normalizado like '${servicoWhere}%' AND parceiro = '${req.usuario.id}'`)).map(x => x.id);
+    const where = `${servicoIds.length > 0 ? `servico in ('${servicoIds.join(`', '`)}') AND` : '' }  ${ status !== '' ? `status = ${status} AND` : '' }  parceiro = '${req.usuario.id}'`;
+    let servicos = [];
+
+    if(!(servicoIds.length === 0 && servicoWhere !== '')){
+        servicos = <IServicoResgatado[]>await ServicoResgatado.Get(where, order_by, limit);
+    
+        for (let i = 0; i < servicos.length; i++) {
+            servicos[i].servico_nome = (<IServico>await Servico.GetFirst(`id = '${servicos[i].servico}'`)).nome;
+            servicos[i].usuario_nome = (<IUsuario>await Usuario.GetFirst(`id = '${servicos[i].usuario}'`)).nome;
+        }
+
+        res.set('X-TOTAL-COUNT', await ServicoResgatado.Count(where));
+    }
+
+
 
     resp.status = 1;
     resp.data = servicos;
@@ -152,7 +195,7 @@ routes.post(`/servico-resgatado/:codigo`, async (req, res) => {
 
     if (servicoResgatado.status === 2) {
         resp.errors.push({
-            msg: "Esse benefício já foi resgatado!"
+            msg: "Esse serviço já foi validado!"
         });
         return res.status(403).send(resp);
     }
@@ -160,7 +203,7 @@ routes.post(`/servico-resgatado/:codigo`, async (req, res) => {
     const update = await ServicoResgatado.Update({ status: 2 }, `codigo = '${params.codigo}' AND parceiro = '${req.usuario.id}'`);
     if (update.status !== 1) {
         resp.errors.push({
-            msg: "Erro ao registrar o resgate do Serviço!"
+            msg: "Erro ao validar serviço!"
         });
         return res.status(500).send(resp);
     }

@@ -11,6 +11,9 @@ export interface IServicoResgatado
     codigo: string;
     data: string;
     status: string|number;
+    
+    usuario_nome?: string;
+    servico_nome?: string;
 }
 
 
