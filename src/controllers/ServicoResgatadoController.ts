@@ -113,7 +113,7 @@ routes.get(`/servico-resgatado`, async (req, res) => {
         errors: []
     };
 
-    let where = (query.where) ? Util.utf8Decode(unescape(String(query.where))) : '';
+    let where = (query.where) ? Util.utf8Decode(unescape(String(query.where.toString().replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, '')))) : '';
     const order_by = String((query.order_by) ? query.order_by : '');
     const limit = String((query.limit) ? query.limit : '');
 
@@ -137,8 +137,8 @@ routes.get(`/servico-resgatado`, async (req, res) => {
     res.send(resp);
 });
 
-// [GET] => /servico-resgatado/busca
-routes.get(`/servico-resgatado/busca`, async (req, res) => {
+// [GET] => /servico-resgatado/por-servico
+routes.get(`/servico-resgatado/por-servico`, async (req, res) => {
     const { query } = req;
     const resp = {
         status: 0,
@@ -147,13 +147,13 @@ routes.get(`/servico-resgatado/busca`, async (req, res) => {
         errors: []
     };
 
-    const servicoWhere = (query.where) ? Util.utf8Decode(unescape(String(query.where))) : '';
+    const servicoWhere = (query.where) ? Util.utf8Decode(unescape(String(query.where.toString().replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, '')))) : '';
     const order_by = String((query.order_by) ? query.order_by : '');
     const status = String((query.status) ? query.status : '');
     const limit = String((query.limit) ? query.limit : '');
 
     const servicoIds = (<IServico[]>await Servico.Get(`nome_normalizado like '${servicoWhere}%' AND parceiro = '${req.usuario.id}'`)).map(x => x.id);
-    const where = `${servicoIds.length > 0 ? `servico in ('${servicoIds.join(`', '`)}') AND` : '' }  ${ status !== '' ? `status = ${status} AND` : '' }  parceiro = '${req.usuario.id}'`;
+    const where = `${servicoIds.length > 0 ? `servico in ('${servicoIds.join(`', '`)}') AND` : '' }  ${ status !== '' ? `status = ${status} AND ` : '' }  parceiro = '${req.usuario.id}'`;
     let servicos = [];
 
     if(!(servicoIds.length === 0 && servicoWhere !== '')){
@@ -166,8 +166,6 @@ routes.get(`/servico-resgatado/busca`, async (req, res) => {
 
         res.set('X-TOTAL-COUNT', await ServicoResgatado.Count(where));
     }
-
-
 
     resp.status = 1;
     resp.data = servicos;

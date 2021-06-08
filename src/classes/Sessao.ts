@@ -183,7 +183,7 @@ class Sessao extends Classes {
                     // Serviço Resgatado
                     { uri: /\/servico-resgatado\/[0-9A-Z]+/, method: 'post' },
                     { uri: /\/servico-resgatado\/[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?/, method: 'put' },
-                    { uri: /\/servico-resgatado\/busca/, method: 'get' },
+                    { uri: /\/servico-resgatado\/por-servico/, method: 'get' },
                 ];
             }
             
