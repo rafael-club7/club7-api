@@ -5,3 +5,6 @@ yarn.lock
 *.log
 .env
 *.sqlite
+
+media/*.png
+media/*.jpg
