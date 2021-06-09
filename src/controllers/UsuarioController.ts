@@ -51,29 +51,29 @@ routes.post(`/usuario`, async (req, res) => {
         payload.indicado = body.indicado;
     }
 
-    const usuarioExiste = await Usuario.GetFirst(`email = '${payload.email}' OR celular = '${payload.celular}' ${payload.tipo === 1 ? `OR cpf = '${payload.cpf}'`: ''} ${payload.tipo === 2 ? `OR cnpj = '${payload.cnpj}'`: ''}`);
+    const usuarioExiste = await Usuario.GetFirst(`email = '${payload.email}' OR celular = '${payload.celular}' ${payload.tipo === 1 ? `OR cpf = '${payload.cpf}'` : ''} ${payload.tipo === 2 ? `OR cnpj = '${payload.cnpj}'` : ''}`);
     if (usuarioExiste !== null) {
         if (usuarioExiste.email === payload.email) {
             resp.errors.push({
                 msg: "Este email já está sendo utilizado"
             });
         }
-        
+
         if (usuarioExiste.celular === payload.celular) {
             resp.errors.push({
                 msg: "Este celular já está sendo utilizado"
             });
         }
 
-        if(payload.tipo === 1){
+        if (payload.tipo === 1) {
             if (usuarioExiste.cpf === payload.cpf) {
                 resp.errors.push({
                     msg: "Este CPF já está sendo utilizado"
                 });
             }
         }
-         
-        if(payload.tipo === 2){
+
+        if (payload.tipo === 2) {
             if (usuarioExiste.cnpj === payload.cnpj) {
                 resp.errors.push({
                     msg: "Este CNPJ já está sendo utilizado"
@@ -127,13 +127,13 @@ routes.get(`/usuario`, async (req, res) => {
     const order_by = String((query.order_by) ? query.order_by : '');
     const limit = String((query.limit) ? query.limit : '');
 
-    const usuarios = <IUsuario[]> await Usuario.Get(where, order_by, limit);
+    const usuarios = <IUsuario[]>await Usuario.Get(where, order_by, limit);
 
     for (let i = 0; i < usuarios.length; i++) {
-        if(usuarios[i].categoria !== null){
+        if (usuarios[i].categoria !== null) {
             usuarios[i].categoria = (await CategoriaParceiro.GetFirst(`id = '${usuarios[i].categoria}'`)).nome;
         }
-        
+
     }
 
     res.set('X-TOTAL-COUNT', await Usuario.Count(where));
@@ -152,7 +152,7 @@ routes.get('/usuario/perfil', async (req, res) => {
         errors: []
     };
 
-    const usuario = <IUsuario> await Usuario.GetFirst(`id = '${req.usuario.id}'`);
+    const usuario = <IUsuario>await Usuario.GetFirst(`id = '${req.usuario.id}'`);
 
     if (usuario === null) {
         resp.errors.push({
@@ -176,14 +176,14 @@ routes.get('/usuario/:id', async (req, res) => {
         errors: []
     };
 
-    if(req.usuario.tipo !== 9 && req.usuario.id !== params.id){
+    if (req.usuario.tipo !== 9 && req.usuario.id !== params.id) {
         resp.errors.push({
             msg: "Você não tem permissão para visualizar esse usuário!"
         });
         return res.status(403).send(resp);
     }
 
-    const usuario = <IUsuario> await Usuario.GetFirst(`id = '${params.id}'`);
+    const usuario = <IUsuario>await Usuario.GetFirst(`id = '${params.id}'`);
 
     if (usuario === null) {
         resp.errors.push({
@@ -199,7 +199,7 @@ routes.get('/usuario/:id', async (req, res) => {
 
 // [PUT] => /usuario/:id
 routes.put('/usuario/:id', async (req, res) => {
-    const { params, body } = req;
+    const { params, body, files } = req;
     const resp = {
         status: 0,
         msg: '',
@@ -207,7 +207,7 @@ routes.put('/usuario/:id', async (req, res) => {
         errors: []
     };
 
-    if(req.usuario.tipo !== 9 && req.usuario.id !== params.id){
+    if (req.usuario.tipo !== 9 && req.usuario.id !== params.id) {
         resp.errors.push({
             msg: "Você não tem permissão para editar esse usuário!"
         });
@@ -223,10 +223,10 @@ routes.put('/usuario/:id', async (req, res) => {
         return res.status(404).send(resp);
     }
 
-    const data : { [k: string] : any} = {};
+    const data: { [k: string]: any } = {};
     const proibidos = ['id', 'status', 'tipo'];
     let edit = false;
-    
+
     Usuario.fields.forEach(campo => {
         if (body[campo.name] !== undefined && !proibidos.includes(campo.name)) {
             data[campo.name] = body[campo.name];
@@ -240,6 +240,18 @@ routes.put('/usuario/:id', async (req, res) => {
         }
     });
 
+    if (files && files.imagem) {
+        const dir = `${__dirname.replace("\\src\\controllers", "")}\\media`;
+
+        const fs = require('fs');
+        if (!fs.existsSync(dir))
+            fs.mkdirSync(dir);
+
+        data.imagem = `${(new Date()).getTime()}_${files.imagem.name}`;
+        files.imagem.mv(`${dir}\\${data.imagem}`);
+        edit = true;
+    }
+
     if (!edit) {
         resp.errors.push({
             msg: 'Nada para editar'
@@ -247,19 +259,19 @@ routes.put('/usuario/:id', async (req, res) => {
         return res.status(400).send(resp);
     }
 
-    if(body.cpf !== undefined){
+    if (body.cpf !== undefined) {
         const cpfExiste = await Usuario.GetFirst(`cpf = '${body.cpf}' and id != '${params.id}'`);
-        if(cpfExiste !== null){
+        if (cpfExiste !== null) {
             resp.errors.push({
                 msg: "Já existe um usuário com esse cpf!"
             });
             return res.status(400).send(resp);
         }
     }
-    
-    if(body.cnpj !== undefined){
+
+    if (body.cnpj !== undefined) {
         const cnpjExiste = await Usuario.GetFirst(`cnpj = '${body.cnpj}' and id != '${params.id}'`);
-        if(cnpjExiste !== null){
+        if (cnpjExiste !== null) {
             resp.errors.push({
                 msg: "Já existe um usuário com esse cnpj!"
             });
@@ -267,18 +279,18 @@ routes.put('/usuario/:id', async (req, res) => {
         }
     }
 
-    if(body.rua || body.numero || body.bairro || body.cidade || body.estado || body.cep ){
-        try{
+    if (body.rua || body.numero || body.bairro || body.cidade || body.estado || body.cep) {
+        try {
             const CepCoords = require("coordenadas-do-cep");
             const coordenadas = await CepCoords.getByEndereco(`${body.cidade || usuarioGet.cidade}, ${body.rua || usuarioGet.rua} ${body.numero || usuarioGet.numero}, ${body.cep.replace(/\D/g, '') || usuarioGet.cep.replace(/\D/g, '')}`);
             data.latitude = coordenadas.lat;
             data.longitude = coordenadas.lon;
-        }catch(e){
+        } catch (e) {
             console.log(`Erro ao buscar coordenadas: ${e}`);
             resp.errors.push({
                 msg: 'Erro ao buscar coordenadas do local!'
             });
-    
+
             return res.status(500).send(resp);
         }
     }
@@ -308,14 +320,14 @@ routes.delete('/usuario/:id', async (req, res) => {
         errors: []
     };
 
-    if(req.usuario.tipo !== 9 && req.usuario.id !== params.id){
+    if (req.usuario.tipo !== 9 && req.usuario.id !== params.id) {
         resp.errors.push({
             msg: "Você não tem permissão para excluir esse usuário!"
         });
         return res.status(403).send(resp);
     }
 
-    const usuarioGet = <IUsuario> await Usuario.GetFirst(`id = '${params.id}'`);
+    const usuarioGet = <IUsuario>await Usuario.GetFirst(`id = '${params.id}'`);
 
     if (usuarioGet === null) {
         resp.errors.push({

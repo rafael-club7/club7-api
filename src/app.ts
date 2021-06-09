@@ -4,6 +4,8 @@ import cors from 'cors';
 import routes from './controllers';
 import Sessao from './Classes/Sessao';
 
+const fileUpload = require('express-fileupload');
+
 class App {
     public express: express.Application;
 
@@ -14,6 +16,7 @@ class App {
     }
 
     private middlewares (): void {
+        this.express.use(fileUpload());
         this.express.use(express.json());
         this.express.use(cors());
         this.express.use(function (req, res, next) {
