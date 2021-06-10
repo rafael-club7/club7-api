@@ -10,6 +10,7 @@ import ServicoController from './ServicoController';
 import ParceiroController from './ParceiroController';
 import IndicacaoController from './IndicacaoController';
 import ServicoResgatadoController from './ServicoResgatadoController';
+import DashboardController from './DashboardController';
 
 const routes = Router();
 
@@ -24,6 +25,7 @@ const routes = Router();
     ParceiroController,
     IndicacaoController,
     ServicoResgatadoController,
+    DashboardController,
 ].forEach((route) => {
     routes.stack = [...routes.stack, ...route.stack];
 });
