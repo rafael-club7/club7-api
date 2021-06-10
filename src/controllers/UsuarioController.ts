@@ -228,7 +228,7 @@ routes.put('/usuario/:id', async (req, res) => {
     let edit = false;
 
     Usuario.fields.forEach(campo => {
-        if (body[campo.name] !== undefined && !proibidos.includes(campo.name)) {
+        if (body[campo.name] !== undefined && !proibidos.includes(campo.name) && usuarioGet[campo.name] !== body[campo.name] ) {
             data[campo.name] = body[campo.name];
             if (campo.name === 'nome') {
                 data.nome_normalizado = Util.toNormal(body[campo.name]);
