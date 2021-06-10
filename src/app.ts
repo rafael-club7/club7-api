@@ -1,5 +1,6 @@
 import express from 'express';
 import cors from 'cors';
+import path from 'path';
 
 import routes from './controllers';
 import Sessao from './Classes/Sessao';
@@ -16,6 +17,7 @@ class App {
     }
 
     private middlewares (): void {
+        this.express.use(`/media`, express.static(path.resolve(__dirname, '../media')));
         this.express.use(fileUpload());
         this.express.use(express.json());
         this.express.use(cors());

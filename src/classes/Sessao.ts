@@ -64,6 +64,7 @@ class Sessao extends Classes {
         }
 
         const open = [
+            { uri: /\/media\/.*/, method: 'get' },
             { uri: /\/usuario/, method: 'post' },
             { uri: /\/login/, method: 'post' },
             { uri: /\/logout/, method: 'post' },
