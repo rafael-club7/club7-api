@@ -7,3 +7,21 @@ pipelines:
           script:
             - npm install
             - npm run build
+          artifacts:
+            - dist/**
+      - step:
+          name: Deploying the app to S3
+          deployment: homolog
+          script:
+            - pipe: atlassian/aws-s3-deploy:0.2.4
+              variables:
+                AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
+                AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
+                AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION
+                S3_BUCKET: $S3_BUCKET
+                ACL: "public-read"
+                LOCAL_PATH: "dist"
+                
+
+
+      
