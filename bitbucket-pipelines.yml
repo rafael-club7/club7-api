@@ -5,5 +5,5 @@ pipelines:
           name: Build and test the app
           image: node:latest
           script:
-            - npm intall
+            - npm install
             - npm run build
