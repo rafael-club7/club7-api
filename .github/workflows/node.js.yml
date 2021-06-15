@@ -34,11 +34,12 @@ jobs:
         MAIL_USER: ${{ secrets.MAIL_USER }}
       run: | 
         npm install
-        sed "s/@@MAIL_FROM/$MAIL_FROM/g" -i .env.example
-        sed "s/@@MAIL_HOST/$MAIL_HOST/g" -i .env.example
-        sed "s/@@MAIL_PASS/$MAIL_PASS/g" -i .env.example
-        sed "s/@@MAIL_PORT/$MAIL_PORT/g" -i .env.example
-        sed "s/@@MAIL_USER/$MAIL_USER/g" -i .env.example
+        cp .env.example .env
+        sed "s/@@MAIL_FROM/$MAIL_FROM/g" -i .env
+        sed "s/@@MAIL_HOST/$MAIL_HOST/g" -i .env
+        sed "s/@@MAIL_PASS/$MAIL_PASS/g" -i .env
+        sed "s/@@MAIL_PORT/$MAIL_PORT/g" -i .env
+        sed "s/@@MAIL_USER/$MAIL_USER/g" -i .env
         
         npm run build
     
