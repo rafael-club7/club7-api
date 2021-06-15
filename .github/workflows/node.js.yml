@@ -45,6 +45,10 @@ jobs:
         MAIL_PASS: ${{ secrets.MAIL_PASS }}
         MAIL_PORT: ${{ secrets.MAIL_PORT }}
         MAIL_USER: ${{ secrets.MAIL_USER }}
+        DB_HOST: ${{ secrets.DB_HOST }}
+        DB_BASE: ${{ secrets.DB_BASE }}
+        DB_PASS: ${{ secrets.DB_PASS }}
+        DB_USER: ${{ secrets.DB_USER }}
       run: |
         cp .env.example .env
         sed "s/@@MAIL_FROM/$MAIL_FROM/g" -i .env
@@ -52,6 +56,11 @@ jobs:
         sed "s/@@MAIL_PASS/$MAIL_PASS/g" -i .env
         sed "s/@@MAIL_PORT/$MAIL_PORT/g" -i .env
         sed "s/@@MAIL_USER/$MAIL_USER/g" -i .env
+        
+        sed "s/@@DB_HOST/$DB_HOST/g" -i .env
+        sed "s/@@DB_BASE/$DB_BASE/g" -i .env
+        sed "s/@@DB_PASS/$DB_PASS/g" -i .env
+        sed "s/@@DB_USER/$DB_USER/g" -i .env
        
     - name: Start PM2
       run: pm2 start dist/index.js --name club7-api -f
