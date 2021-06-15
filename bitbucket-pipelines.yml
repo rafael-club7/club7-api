@@ -17,5 +17,6 @@ pipelines:
                 AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY # Optional if already defined in the context.
                 AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION # Optional if already defined in the context.
                 APPLICATION_NAME: $APPLICATION_NAME
+                DEPLOYMENT_GROUP: 'deployment_group'
                 COMMAND: 'deploy' # 'upload' or 'deploy'.
                 # AWS_OIDC_ROLE_ARN: '<string>' # Optional by default. Required for OpenID Connect (OIDC) authentication.
