@@ -3,9 +3,7 @@ pipelines:
     customPipelineWithRunnerStep:
       - step:
           name: Step 1
-          runs-on: 
-            - 'self.hosted'
-            - 'my.custom.label'
+          runs-on: self.hosted 
           script:
             - echo "This step will run on a self hosted runner with 128 GB of memory.";
       - step:
