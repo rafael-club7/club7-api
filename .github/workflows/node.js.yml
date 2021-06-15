@@ -29,7 +29,15 @@ jobs:
       run: | 
         npm install
         npm run build
+        
+  Development:
+    runs-on: self-hosted
+    needs: [ build ]
+    
+    environment:
+      name: homolog
 
+    steps:
     - name: Define Environment Variables
       env: # Ou como uma variável de ambiente
         MAIL_FROM: ${{ secrets.MAIL_FROM }}
@@ -47,5 +55,5 @@ jobs:
        
     - name: Start PM2
       run: pm2 start dist/index.js --name club7-api -f
-        
+
       
