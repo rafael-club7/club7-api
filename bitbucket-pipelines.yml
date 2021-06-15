@@ -6,7 +6,7 @@ pipelines:
           image: node:latest
           script:
             - npm install
-            - npm build
+            - npm run build
       - step: 
           name: Deploy to EC2
           deployment: homolog
