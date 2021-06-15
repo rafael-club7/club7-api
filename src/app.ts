@@ -3,7 +3,7 @@ import cors from 'cors';
 import path from 'path';
 
 import routes from './controllers';
-import Sessao from './Classes/Sessao';
+import Sessao from './classes/Sessao';
 
 const fileUpload = require('express-fileupload');
 
