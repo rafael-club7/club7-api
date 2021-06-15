@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import Plano, { IPlano } from '../Classes/Plano';
+import Plano, { IPlano } from '../classes/Plano';
 import Util from '../System/Util';
 
 const routes = Router();

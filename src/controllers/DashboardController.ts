@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import DB from '../System/DB';
-import Servico from '../Classes/Servico';
-import ServicoResgatado from '../Classes/ServicoResgatado';
+import Servico from '../classes/Servico';
+import ServicoResgatado from '../classes/ServicoResgatado';
 
 const routes = Router();
 

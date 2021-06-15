@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import ServicoResgatado, { IServicoResgatado } from '../Classes/ServicoResgatado';
-import Servico, { IServico, getTipoResgateName } from '../Classes/Servico';
+import ServicoResgatado, { IServicoResgatado } from '../classes/ServicoResgatado';
+import Servico, { IServico, getTipoResgateName } from '../classes/Servico';
 import Util from '../System/Util';
 import Usuario, { IUsuario } from '../classes/Usuario';
 

@@ -1,7 +1,7 @@
 import { Router } from 'express';
-import ServicoResgatado from '../Classes/ServicoResgatado';
-import Servico, { IServico } from '../Classes/Servico';
-import Usuario, { IUsuario } from '../Classes/Usuario';
+import ServicoResgatado from '../classes/ServicoResgatado';
+import Servico, { IServico } from '../classes/Servico';
+import Usuario, { IUsuario } from '../classes/Usuario';
 import Util from '../System/Util';
 
 const routes = Router();
