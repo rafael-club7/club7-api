@@ -1,27 +1,14 @@
 pipelines:
-  branches:
-    master:
+  custom:
+    customPipelineWithRunnerStep:
       - step:
-          name: Build and test the app
-          image: node:latest
+          name: Step 1
+          runs-on: 
+            - 'self.hosted'
+            - 'my.custom.label'
           script:
-            - npm install
-            - npm run build
-          artifacts:
-            - dist/**
+            - echo "This step will run on a self hosted runner with 128 GB of memory.";
       - step:
-          name: Deploying the app to S3
-          deployment: homolog
+          name: Step 2
           script:
-            - pipe: atlassian/aws-s3-deploy:0.2.4
-              variables:
-                AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
-                AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
-                AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION
-                S3_BUCKET: $S3_BUCKET
-                ACL: "public-read"
-                LOCAL_PATH: "dist"
-                
-
-
-      
+            - echo "This step will run on Atlassian's infrastructure as usual.";
