@@ -26,27 +26,25 @@ jobs:
         node-version: ${{ matrix.node-version }}
     
     - name: Install and Build
+      run: | 
+        npm install
+        npm run build
+
+    - name: Define Environment Variables
       env: # Ou como uma variável de ambiente
         MAIL_FROM: ${{ secrets.MAIL_FROM }}
         MAIL_HOST: ${{ secrets.MAIL_HOST }}
         MAIL_PASS: ${{ secrets.MAIL_PASS }}
         MAIL_PORT: ${{ secrets.MAIL_PORT }}
         MAIL_USER: ${{ secrets.MAIL_USER }}
-      run: | 
-        npm install
+      run: |
         cp .env.example .env
         sed "s/@@MAIL_FROM/$MAIL_FROM/g" -i .env
         sed "s/@@MAIL_HOST/$MAIL_HOST/g" -i .env
         sed "s/@@MAIL_PASS/$MAIL_PASS/g" -i .env
         sed "s/@@MAIL_PORT/$MAIL_PORT/g" -i .env
         sed "s/@@MAIL_USER/$MAIL_USER/g" -i .env
-        
-        npm run build
-    
-    - name: Stop PM2
-      run: pm2 stop club7-api
-      if: ${{failure()}}  
-        
+       
     - name: Start PM2
       run: pm2 start dist/index.js --name club7-api -f
         
