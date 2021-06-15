@@ -3,7 +3,9 @@ pipelines:
     customPipelineWithRunnerStep:
       - step:
           name: Step 1
-          runs-on: self.hosted 
+          runs-on: 
+            - 'self.hosted'
+            - 'api.club7.com.br'
           script:
             - echo "This step will run on a self hosted runner with 128 GB of memory.";
       - step:
