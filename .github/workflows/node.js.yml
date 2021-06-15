@@ -27,9 +27,11 @@ jobs:
         node-version: ${{ matrix.node-version }}
     
     - name: Install and Build
+      env: # Ou como uma variável de ambiente
+        MAIL_HOST: ${{ secrets.MAIL_HOST }}
       run: | 
         npm install
-        sed "s/@@MAIL_HOST/123/g" -i .env.example
+        sed "s/@@MAIL_HOST/$MAIL_HOST/g" -i .env.example
         npm run build
     
     - name: Stop PM2
