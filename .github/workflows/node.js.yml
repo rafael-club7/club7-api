@@ -30,12 +30,12 @@ jobs:
       run: | 
         npm install
         npm run build
-      if: ${{failure()}}
+    
+    - name: Stop PM2
+      run: pm2 stop club7-api
+      if: ${{failure()}}  
         
-    - name: Run PM2
-      run: |
-        pm2 stop club7-api
-        pm2 start dist/index.js --name club7-api
-        
+    - name: Stop PM2
+      run: pm2 start dist/index.js --name club7-api
         
       
