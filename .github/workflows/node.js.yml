@@ -46,11 +46,11 @@ jobs:
         with:
           host: 143.244.162.174
           username: deploy-api
-          key: $SSH_KEY
+#           key: $SSH_KEY
           port: 22
           source: "./*"
           target: "teste"
-          fingerprint: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDVDtq81U1so8h0msaSt0bpMlAonoTBs/NN8FYU6LRbsI3FpIObXX6zSguStkaVZqfLxX9lhODCB00KDFwXjAO8MJIiSo6lcwfYKuIlheXl+213+7vyuMKXTFtQkpYevXpE5JREdhJdfIrdb2Z92pBNZxGTR8vEFEQUSmLxH7gIEtFtJvuSKORfU2MUfOk5Iw9sQLHFwriuS8BxObHonVFLIimVj9swOS5arDjujCgOfebHRCHvua3vR7z7kCso9wPEts6I9mzNSYuqmHvMEoZCYaZvu93yib55XJpAm74XjP2eyKBv6fqn6Vawmzw9BzMpgYKosdMhnbUQnEwh5lfRVf0OSua/pXsCixNHLFSSIdn7IDB3B7rsH3cmE3BlnwMnsMHCjWd6iBQWywqbdhqsI7NGKsRi1LyxKULJwLvVlH2/oMKL9fvo/VmBOWwCOA/7sblZSg1QcBhhTphpmTRlMA3uBKXXugeEMVri/tP+I+vZp6PQ3J1ybEMOmBmVKAs= rafael coelho@LAPTOP-BQOEBN6J
+          fingerprint: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDpE2dYLzMQb4j8n7LG9t92M/5rodVbpYAKUTlXY436J0/iN0dUkBOZ/C/BBlR9rF2BJBhoes7DhD3yzVju0zVr4+ZjKd3FEzeqZ7XlRIh+qdN+c2uWj2rMG5PPJ9bIeYRiSaUf2HVfuGDxEXZFof+ZCeInNo3H7DSYRm9y3sG+F5WM2VYK0DjeM/zVgmPf9V1vicH1E+4FGURZ1FWT1joRHzQ8DIykX1EPNHKnFnjy9TZ+/x181ir86efY4NCrSpSHGZ8yBsnlPeWyWdrlK2kqaKMw0qO77xiXWcISF2/LQ9UUxpQ9OsI3y5UuS7uNO5OfkifqNsokmWgL/aT6BsZoW89/f/fwvmdPGgrRldDc2Z8B4yu/c20/DioER261BfMKxYotz9ZVu7HWIGqETTJ66TdWUrz39wrCt+seIUoCXUjnc9NU5k3KbjQDQe0qaz/LhydidU/5ypjZKEsE82ejs8Mb2CfKg2po8bH0giLRNkmZNjiWjCAuxAJQk+tMlVE= deploy-api@deploy
 
           
 
