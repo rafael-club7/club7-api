@@ -39,16 +39,18 @@ jobs:
     steps:
       
       - name: Send Files to Server
-        uses: garygrossgarten/github-action-scp@release
+        uses: appleboy/ssh-action@master
         env:
           SSH_KEY: ${{ secrets.SSH_KEY }}
-     
+          
         with:
-          local: ./
-          remote: teste
           host: 143.244.162.174
           username: deploy-api
-          privateKey: $SSH_KEY
+          key: $SSH_KEY
+          port: 22
+          source: "./*"
+          target: "teste"
+
           
 
 
