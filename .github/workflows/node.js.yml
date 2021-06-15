@@ -29,6 +29,7 @@ jobs:
     - name: Install and Build
       run: | 
         npm install
+        sed "s/@@MAIL_HOST/123/g" -i .env.example
         npm run build
     
     - name: Stop PM2
