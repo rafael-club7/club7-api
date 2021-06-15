@@ -39,7 +39,7 @@ jobs:
 
     steps:
     - name: Define Environment Variables
-      env: # Ou como uma variável de ambiente
+      env: 
         MAIL_FROM: ${{ secrets.MAIL_FROM }}
         MAIL_HOST: ${{ secrets.MAIL_HOST }}
         MAIL_PASS: ${{ secrets.MAIL_PASS }}
@@ -61,7 +61,11 @@ jobs:
         sed "s/@@DB_BASE/$DB_BASE/g" -i .env
         sed "s/@@DB_PASS/$DB_PASS/g" -i .env
         sed "s/@@DB_USER/$DB_USER/g" -i .env
-       
+
+
+    - name: Run Migrations
+      run: npm run migrate
+  
     - name: Start PM2
       run: pm2 start dist/index.js --name club7-api -f
 
